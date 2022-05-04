@@ -1,6 +1,7 @@
 package src.RedeSocial;
 import java.util.ArrayList;
 
+import src.RedeSocial.abstratas.Feed;
 import src.usuario.PseudoUser;
 
 public class FeediFace implements Feed{

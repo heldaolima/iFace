@@ -1,4 +1,6 @@
-package src.RedeSocial;
+package src.RedeSocial.abstratas;
+
+import src.RedeSocial.Publicacao;
 
 public interface Feed {
     abstract void mostrarPosts();

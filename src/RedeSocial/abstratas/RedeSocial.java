@@ -1,4 +1,7 @@
-package src.RedeSocial;
+package src.RedeSocial.abstratas;
+
+import src.RedeSocial.Logado;
+import src.RedeSocial.Usuario;
 
 public interface RedeSocial {
     abstract boolean novaConta();

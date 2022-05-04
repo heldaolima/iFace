@@ -2,10 +2,10 @@ package src.RedeSocial;
 
 import java.util.ArrayList;
 
+import src.RedeSocial.abstratas.Perfil;
 import src.usuario.Amigo;
 import src.usuario.Atributo;
 import src.usuario.Mensagem;
-import src.usuario.Perfil;
 import src.usuario.Solicitacao;
 
 public class Usuario implements Perfil {

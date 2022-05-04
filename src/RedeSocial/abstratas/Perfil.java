@@ -1,6 +1,10 @@
-package src.usuario;
+package src.RedeSocial.abstratas;
 
 import src.RedeSocial.Comunidade;
+import src.usuario.Amigo;
+import src.usuario.Atributo;
+import src.usuario.Mensagem;
+import src.usuario.Solicitacao;
 
 
 public interface Perfil {
