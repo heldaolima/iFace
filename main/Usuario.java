@@ -6,18 +6,13 @@ import templates.Perfil;
 
 public class Usuario implements Perfil {
 
-    private String nome;
-    private String login;
-    private String senha;
+    private String nome, login, senha;
     protected ArrayList<Amigo> amigos = new ArrayList<Amigo>();
     protected ArrayList<Solicitacao> solicitacoes = new ArrayList<Solicitacao>();
-    private Comunidade comunidade = null;
-    private ArrayList<String> comunidadesMembro;
-    private ArrayList<Mensagem> mensagens = new ArrayList<Mensagem>();
+    protected Comunidade comunidade = null;
+    protected ArrayList<String> comunidadesMembro = new ArrayList<String>();
     protected ArrayList<Atributo> atributos = new ArrayList<Atributo>();
-    //veja se consegue adicionar um indice; mas talvez não seja necessário, 
-    //porque tem como pegar o cara a partir do que ele é no arrayList
-
+    
     public Usuario(String nome, String login, String senha) {
         this.nome = nome;
         this.login = login;
@@ -25,7 +20,7 @@ public class Usuario implements Perfil {
     }
 
     public String dadosBasicos() {
-        return this.login + ": " + this.nome;
+        return "Login: @"+this.login + "| Nome: " + this.nome;
     }
     
     @Override
@@ -69,7 +64,7 @@ public class Usuario implements Perfil {
     public void mostrarAtributos() {
         int i = 1;
         for (Atributo a: atributos) {
-            System.out.println("["+i+"]"+a.toString());
+            System.out.println("["+i+"] "+a.toString());
             i++;
         }
     }
@@ -135,11 +130,6 @@ public class Usuario implements Perfil {
         amigos.add(amigo);
     }
 
-    @Override
-    public void removerAmigo(String login) {
-        // TODO Auto-generated method stub
-        
-    }
 
     @Override
     public int verificarAmizade(String login) {
@@ -152,25 +142,30 @@ public class Usuario implements Perfil {
 
     @Override
     public int qtdMensagens() {
-        return mensagens.size();
+        int cont = 0;
+        for (Amigo a: amigos) {
+            cont += a.qtdMensagens();
+        }
+        return cont;
     }
 
     @Override
     public void mostrarMensagens() {
-        for(Mensagem msg : mensagens) {
-            System.out.println(msg.toString());
+        int i = 1;
+        for (Amigo a: amigos) {
+            System.out.println("["+i+"] "+a.getLogin()+": ");
+            a.mostrarMensagens();
+            System.out.println();
         }
     }
 
     @Override
-    public boolean enviarMensagem(Mensagem msg) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public void novaMensagem(Mensagem msg) {
-        mensagens.add(msg);
+    public void receberMensagem(String loginRemetente, Mensagem msg) {
+        for (Amigo a: amigos) {
+            if (a.getLogin().equals(loginRemetente)) {
+                a.novaMensagem(msg);
+            }
+        }
     }
 
     @Override
@@ -178,7 +173,16 @@ public class Usuario implements Perfil {
         if (nova == null)
             return false;
 
-        comunidade = nova;
+        this.comunidade = nova;
+        return true;
+    }
+
+    @Override
+    public boolean apagarComundidade() {
+        if (comunidade == null)
+            return false;
+
+        comunidade = null;
         return true;
     }
 
@@ -196,7 +200,10 @@ public class Usuario implements Perfil {
 
     @Override
     public boolean eMembro(Comunidade comunidade) {
-        return false;
+        if (comunidadesMembro.contains(comunidade.getNome())) 
+            return true;
+        else 
+            return false; 
     }
 
     @Override
@@ -208,14 +215,52 @@ public class Usuario implements Perfil {
 
     @Override
     public void virarMembro(Comunidade comunidade) {
-        // TODO Auto-generated method stub
+        comunidadesMembro.add(comunidade.getNome());
         
     }
 
     @Override
     public void mostrarComunidadesMembro() {
-        // TODO Auto-generated method stub
+        for (String nome: comunidadesMembro) {
+            System.out.println(nome);
+        }   
+    }
+
+    public int qtdComunidadesMembro() {
+        return this.comunidadesMembro.size();
+    }
+
+    @Override
+    public void resumoDaConta() {
+        System.out.println(this.dadosBasicos());
+        System.out.println("-------------------");
+        System.out.println("Você tem "+this.qtdAtributos()+" atributos:");
+        this.mostrarAtributos();
+        System.out.println("-------------------");
         
+        if (this.temComunidade()) {
+            System.out.println("Comunidade criada: ");
+            System.out.println(this.comunidadeToString());
+        }
+        else
+            System.out.println("Você não criou uma comunidade\n");
+        System.out.println("-------------------");
+
+        System.out.println("Você é membro de "+this.qtdComunidadesMembro()+" comunidades:");
+        this.mostrarComunidadesMembro();
+        System.out.println("-------------------");
+
+        System.out.println("Você tem "+this.qtdAmigos()+" amigos: ");
+        this.mostrarAmigos();
+        System.out.println("-------------------");
+
+        if (this.qtdMensagens() > 0) {
+            System.out.println("Suas mensagens: ");
+            this.mostrarMensagens();
+        }
+        else
+            System.out.println("Você não tem mensagens");
+        System.out.println("-------------------");
     }
 
     public Solicitacao getSolicitacao(int i ) {
@@ -235,4 +280,10 @@ public class Usuario implements Perfil {
     public Amigo getAmigo(int i) {
         return amigos.get(i);
     }
+
+    public Atributo getAtributo(int i) {
+        return atributos.get(i);
+    }
+
+
 }

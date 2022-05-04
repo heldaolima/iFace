@@ -27,6 +27,6 @@ public class Mensagem {
     
     @Override
     public String toString() {
-        return this.sender+": "+ this.content;
+        return "@"+this.sender+": "+ this.content;
     }
 }

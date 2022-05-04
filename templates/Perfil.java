@@ -11,7 +11,6 @@ public interface Perfil {
     //básico
     abstract boolean setNome(String nome);
     abstract boolean setLogin(String login);
-    // abstract boolean setSenha(String senha); // não se pode editar a senha
     abstract String getNome();
     abstract String getLogin();
     abstract String getSenha();
@@ -31,19 +30,22 @@ public interface Perfil {
             abstract void mostrarAmigos();
             abstract int qtdAmigos();
             abstract void adicionarAmigo(Amigo amigo);
-            abstract void removerAmigo(String login);
+            // abstract void removerAmigo(String login);
             abstract int verificarAmizade(String login);
             //mensagens
             abstract int qtdMensagens();
             abstract void mostrarMensagens();
-            abstract boolean enviarMensagem(Mensagem msg);
-            abstract void novaMensagem(Mensagem msg); //essa deve somente colocar a nova lá dentro; o processo que, faz é o iFace
+            abstract void receberMensagem(String loginRemetente, Mensagem msg);
+            // abstract boolean enviarMensagem(Mensagem msg);
+            // abstract void novaMensagem(Mensagem msg); //essa deve somente colocar a nova lá dentro; o processo que, faz é o iFace
     //comunidades
-            abstract boolean criarComunidade(Comunidade nova);
+            abstract boolean criarComunidade(Comunidade comunidade);
+            abstract boolean apagarComundidade();
             abstract String comunidadeToString();
             abstract boolean temComunidade();
             abstract boolean eMembro(Comunidade comunidade);
             abstract boolean eDono(Comunidade comunidade);
             abstract void virarMembro(Comunidade comunidade);
             abstract void mostrarComunidadesMembro();
+        abstract void resumoDaConta();
 }

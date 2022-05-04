@@ -8,9 +8,8 @@ public class Solicitacao extends PseudoUser{
         this.qtdAmigos = qtdAmigos;
     }
 
-
     @Override
     public String toString() {
-        return super.toString() + "| " + this.qtdAmigos + "amigos"; 
+        return super.toString() + "| " + this.qtdAmigos + " amigos"; 
     }
 }

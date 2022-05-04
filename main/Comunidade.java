@@ -1,20 +1,31 @@
 package main;
+import java.util.ArrayList;
 
 public class Comunidade {
-    private String nome, descricao, dono;
-    // private ArrayList<String> membros = new ArrayList<String>();
+    private String nome, descricao; 
+    private PseudoUser fundador;
+    private ArrayList<PseudoUser> membros = new ArrayList<PseudoUser>();
 
-    Comunidade(String nome, String descricao, String dono) {
+    Comunidade(String nome, String descricao, PseudoUser fundador) {
         this.nome = nome;
-        this.descricao = dono;
-        this.dono = dono;
+        this.descricao = descricao;
+        this.fundador = fundador;
+    }
+
+    public void addMembro(PseudoUser membro) {
+        membros.add(membro);
+    }
+
+    public String getNome() {
+        return this.nome;
     }
 
     @Override
     public String toString() {
         return "Nome: " + this.nome +
         "\nDescrição: " + this.descricao +
-        "\nFundador: " + this.dono;
+        "\nFundador: " + this.fundador.toString()+
+        "\nQuantidade de membros: " + membros.size();
     }
 
 }

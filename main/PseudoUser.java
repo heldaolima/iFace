@@ -18,7 +18,7 @@ public class PseudoUser {
 
     @Override
     public String toString() {
-        return "Login: " + this.login + 
+        return "Login: @" + this.login + 
         " | Nome: " + this.nome;
     }
 }

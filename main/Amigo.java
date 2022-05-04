@@ -4,6 +4,8 @@ import java.util.ArrayList;
 public class Amigo extends PseudoUser {
     
     protected String nome, login;
+    protected ArrayList<Mensagem> mensagens = new ArrayList<Mensagem>();
+
     Amigo(String nome, String login){
         super(nome, login);
         // this.amizade = amizade;
@@ -16,12 +18,19 @@ public class Amigo extends PseudoUser {
             }
         }
     }
+    
+    public void novaMensagem(Mensagem msg) {
+        mensagens.add(msg);
+    }
 
-    public void trocaDeMensagens(Usuario logado, Mensagem msg,ArrayList<Usuario> usuarios) {
-        for (Usuario amigo: usuarios) {
-            if (amigo.getLogin().equals(this.login)) {
-                amigo.novaMensagem(msg);
-            }
+    public int qtdMensagens() {
+        return mensagens.size();
+    }
+
+    public void mostrarMensagens() {
+        int i = 1;
+        for(Mensagem msg: mensagens) { 
+            System.out.println("    ["+i+"] "+msg.toString());
         }
     }
     
