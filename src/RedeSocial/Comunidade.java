@@ -1,12 +1,14 @@
-package main;
+package src.RedeSocial;
 import java.util.ArrayList;
+
+import src.usuario.PseudoUser;
 
 public class Comunidade {
     private String nome, descricao; 
     private PseudoUser fundador;
     private ArrayList<PseudoUser> membros = new ArrayList<PseudoUser>();
 
-    Comunidade(String nome, String descricao, PseudoUser fundador) {
+    public Comunidade(String nome, String descricao, PseudoUser fundador) {
         this.nome = nome;
         this.descricao = descricao;
         this.fundador = fundador;

@@ -1,6 +1,4 @@
-package templates;
-
-import main.Publicacao;
+package src.RedeSocial;
 
 public interface Feed {
     abstract void mostrarPosts();

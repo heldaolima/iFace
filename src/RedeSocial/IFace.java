@@ -1,9 +1,13 @@
-package main;
+package src.RedeSocial;
 
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import templates.RedeSocial;
+import src.usuario.Amigo;
+import src.usuario.Atributo;
+import src.usuario.Mensagem;
+import src.usuario.PseudoUser;
+import src.usuario.Solicitacao;
 
 public class IFace implements RedeSocial {
     private ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
@@ -44,7 +48,6 @@ public class IFace implements RedeSocial {
         }
 
         usuarios.add(new Usuario(nome, login, senha));
-        System.out.println();
         return true;
     }
 

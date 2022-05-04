@@ -1,8 +1,12 @@
-package main;
+package src.RedeSocial;
 
 import java.util.ArrayList;
 
-import templates.Perfil;
+import src.usuario.Amigo;
+import src.usuario.Atributo;
+import src.usuario.Mensagem;
+import src.usuario.Perfil;
+import src.usuario.Solicitacao;
 
 public class Usuario implements Perfil {
 
@@ -212,24 +216,31 @@ public class Usuario implements Perfil {
             return true;
         return false;
     }
-
+    
     @Override
     public void virarMembro(Comunidade comunidade) {
         comunidadesMembro.add(comunidade.getNome());
         
     }
-
+    
     @Override
     public void mostrarComunidadesMembro() {
         for (String nome: comunidadesMembro) {
             System.out.println(nome);
         }   
     }
-
-    public int qtdComunidadesMembro() {
-        return this.comunidadesMembro.size();
+    
+    @Override
+    public void removerAmigo(Amigo amigo) {
+        this.amigos.remove(amigo);
     }
 
+    @Override
+    public void removerComunidadeMembro(String nome) {
+        comunidadesMembro.remove(nome);
+    }
+
+    
     @Override
     public void resumoDaConta() {
         System.out.println(this.dadosBasicos());
@@ -243,34 +254,38 @@ public class Usuario implements Perfil {
             System.out.println(this.comunidadeToString());
         }
         else
-            System.out.println("Você não criou uma comunidade\n");
+        System.out.println("Você não criou uma comunidade\n");
         System.out.println("-------------------");
-
+        
         System.out.println("Você é membro de "+this.qtdComunidadesMembro()+" comunidades:");
         this.mostrarComunidadesMembro();
         System.out.println("-------------------");
-
+        
         System.out.println("Você tem "+this.qtdAmigos()+" amigos: ");
         this.mostrarAmigos();
         System.out.println("-------------------");
-
+        
         if (this.qtdMensagens() > 0) {
             System.out.println("Suas mensagens: ");
             this.mostrarMensagens();
         }
         else
-            System.out.println("Você não tem mensagens");
+        System.out.println("Você não tem mensagens");
         System.out.println("-------------------");
+    }
+    
+    public int qtdComunidadesMembro() {
+        return this.comunidadesMembro.size();
     }
 
     public Solicitacao getSolicitacao(int i ) {
         return solicitacoes.get(i);
     }
-
+    
     public Solicitacao getSolicitacao(String login) {
         for (Solicitacao sol: solicitacoes) {
             if (sol.getLogin().equals(login))
-                return sol;
+            return sol;
         }
         return null;
     }
@@ -299,13 +314,5 @@ public class Usuario implements Perfil {
 
     public Atributo getAtributo(int i) {
         return atributos.get(i);
-    }
-
-    public void removerAmigo(Amigo amigo) {
-        this.amigos.remove(amigo);
-    }
-
-    public void removerComunidadeMembro(String nome) {
-        comunidadesMembro.remove(nome);
     }
 }

@@ -1,4 +1,4 @@
-package main;
+package src.usuario;
 
 public class Mensagem {
     private String sender, content;

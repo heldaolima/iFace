@@ -1,10 +1,12 @@
-package main; //ele deve ter acesso ao package da rede E o do usuário, mas só ele
+package src.usuario; //ele deve ter acesso ao package da rede E o do usuário, mas só ele
 import java.util.ArrayList;
+
+import src.RedeSocial.Usuario;
 
 public class Amigo extends PseudoUser {
     protected ArrayList<Mensagem> mensagens = new ArrayList<Mensagem>();
 
-    Amigo(String nome, String login){
+    public Amigo(String nome, String login){
         super(nome, login);
     }
 

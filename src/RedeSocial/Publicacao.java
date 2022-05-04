@@ -1,11 +1,13 @@
-package main;
+package src.RedeSocial;
+
+import src.usuario.PseudoUser;
 
 public class Publicacao {
     private PseudoUser usuario;
     private String conteudo;
     private boolean privado; 
     
-    Publicacao(PseudoUser usuario, String conteudo, boolean privado) {
+    public Publicacao(PseudoUser usuario, String conteudo, boolean privado) {
         this.usuario = usuario;
         this.conteudo = conteudo;
         this.privado = privado;

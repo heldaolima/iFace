@@ -1,9 +1,9 @@
-package main;
+package src.usuario;
 
 public class Solicitacao extends PseudoUser{
     private int qtdAmigos;
 
-    Solicitacao(String nome, String login, int qtdAmigos) {
+    public Solicitacao(String nome, String login, int qtdAmigos) {
         super(nome, login);
         this.qtdAmigos = qtdAmigos;
     }

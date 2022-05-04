@@ -1,8 +1,4 @@
-package templates;
-
-// import main.Atributo;
-import main.Usuario;
-import main.Logado;
+package src.RedeSocial;
 
 public interface RedeSocial {
     abstract boolean novaConta();

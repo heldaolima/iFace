@@ -1,6 +1,9 @@
-package main;
+package src;
 
 import java.util.Scanner;
+
+import src.RedeSocial.IFace;
+import src.RedeSocial.Logado;
 
 public class Interface {
     public static void main(String[] args) {
@@ -20,19 +23,19 @@ public class Interface {
                 if (escolha == 1) {
                         titulo("Criação de conta");
                         if (iFace.novaConta())
-                            System.out.println("Conta criada com sucesso\n");
+                            System.out.println("\nConta criada com sucesso\n");
                         else 
-                            System.out.println("Criação de conta cancelada\n");
+                            System.out.println("\n\nCriação de conta cancelada\n");
                 }
                 else if (escolha == 2) {
                     titulo("Entre na sua conta");
                     logado = iFace.login();
                     if (logado == null)
-                        System.out.println("Login ou senha inválidos\n");
+                        System.out.println("\nLogin ou senha inválidos\n");
                     else 
-                        System.out.println("Logado com sucesso! Bem vind@, "+ logado.getNome());
+                        System.out.println("\nLogado com sucesso! Bem vind@, "+ logado.getNome());
                 }
-                else 
+                else if (escolha != -1)
                     System.out.println("\nEntrada inválida! \n");
             }
             else {
@@ -43,54 +46,54 @@ public class Interface {
                 if (escolha == 1) {
                     titulo("Novo atributo");
                     if (iFace.novoAtributo(logado))
-                        System.out.println("Atributo adicionado\n");
+                        System.out.println("\nAtributo adicionado\n");
                     else
-                        System.out.println("Criação de atributo cancelada");
+                        System.out.println("\nCriação de atributo cancelada");
                 }
 
                 else if (escolha == 2) {
                     titulo("Edição de atributo");
                     if (iFace.editarAtributo(logado))
-                        System.out.println("Edição concluída\n");
+                        System.out.println("\nEdição concluída\n");
                     else 
-                        System.out.println("Edição cancelada\n");
+                        System.out.println("\nEdição cancelada\n");
                 }
 
                 else if (escolha == 3) {
                     titulo("Enviar solicitacao");
                     if (iFace.enviarSolicitacao(logado))
-                        System.out.println("Solicitação enviada!\n");
+                        System.out.println("\nSolicitação enviada!\n");
                     else 
-                        System.out.println("Envio de solicitação cancelado\n");
+                        System.out.println("\nEnvio de solicitação cancelado\n");
                 }
 
                 else if (escolha == 4) {
                     titulo("Responder solicitacao");
                     if (iFace.responderSolicitacao(logado))
-                        System.out.println("Solicitação respondida\n");
+                        System.out.println("\nSolicitação respondida\n");
                     else 
-                        System.out.println("Resposta cancelada\n");
+                        System.out.println("\nResposta cancelada\n");
                 }
                 else if (escolha == 5) {
                     titulo("Enviar mensagem");
                     if (iFace.enviarMensagem(logado))
-                        System.out.println("Mensagem enviada\n");
+                        System.out.println("\nMensagem enviada\n");
                     else
-                        System.out.println("Envio de mensagem cancelado\n");
+                        System.out.println("\nEnvio de mensagem cancelado\n");
                 }
                 else if (escolha == 6) {
                     titulo("Criar comunidade");
                     if (iFace.novaComunidade(logado))
-                        System.out.println("Comunidade criada\n");
+                        System.out.println("\nComunidade criada\n");
                     else 
-                        System.out.println("Criação de comunidade cancelada\n");
+                        System.out.println("\nCriação de comunidade cancelada\n");
                 }
                 else if (escolha == 7){
                     titulo("Entrar em uma comunidade");
                     if (iFace.virarMembroComunidade(logado)) 
-                        System.out.println("Você virou membro da comunidade!\n");
+                        System.out.println("\nVocê virou membro da comunidade!\n");
                     else 
-                        System.out.println("Operação cancelada\n");
+                        System.out.println("\nOperação cancelada\n");
                 }
                 else if (escolha == 8) {
                     titulo("Feed de notícias");
@@ -100,9 +103,9 @@ public class Interface {
                 else if (escolha == 9) {
                     titulo("Publicar no feed");
                     if (iFace.publicarNoFeed(logado)) 
-                        System.out.println("Publicação disponível no feed\n");
+                        System.out.println("\nPublicação disponível no feed\n");
                     else 
-                        System.out.println("Publicação cancelada\n");
+                        System.out.println("\nPublicação cancelada\n");
                 }
                 else if (escolha == 10) {
                     titulo("Resumo da conta");
@@ -116,14 +119,17 @@ public class Interface {
                 else if (escolha == 12) {
                     titulo("Exclusão da conta");
                     if (iFace.excluirConta(logado)) {
-                        System.out.println("Conta excluída");
+                        System.out.println("\nConta excluída\n");
                         logado = null;
                     }
                     else
-                        System.out.println("Exclusão de conta cancelada");
+                        System.out.println("\nExclusão de conta cancelada\n");
                 }
+                else
+                    System.out.println("\nEntrada inválida\n");
             }
         }
+        System.out.println("\nEncerrando...\n");
         sc.close();
     }
 

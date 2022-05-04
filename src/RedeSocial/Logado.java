@@ -1,5 +1,10 @@
-package main;
+package src.RedeSocial;
 import java.util.ArrayList;
+
+import src.usuario.Amigo;
+import src.usuario.Atributo;
+import src.usuario.Mensagem;
+import src.usuario.Solicitacao;
 
 public class Logado extends Usuario {
     public Logado(String nome, String login, String senha, ArrayList<Amigo> amigos, ArrayList<Solicitacao> solicitacoes, Comunidade comunidade,  ArrayList<String> comunidadesMembro, ArrayList<Atributo> atributos) {

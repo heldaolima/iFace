@@ -1,4 +1,4 @@
-package main;
+package src.usuario;
 
 public class Atributo {
     private String nome, descricao;

@@ -1,9 +1,10 @@
-package main;
-import templates.Feed;
+package src.RedeSocial;
 import java.util.ArrayList;
 
+import src.usuario.PseudoUser;
+
 public class FeediFace implements Feed{
-    ArrayList<Publicacao> publicacoes = new ArrayList<Publicacao>();
+    protected ArrayList<Publicacao> publicacoes = new ArrayList<Publicacao>();
     
     @Override
     public void mostrarPosts() {

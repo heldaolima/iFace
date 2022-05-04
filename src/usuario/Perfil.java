@@ -1,10 +1,6 @@
-package templates;
+package src.usuario;
 
-import main.Atributo;
-import main.Comunidade;
-import main.Mensagem;
-import main.Solicitacao;
-import main.Amigo;
+import src.RedeSocial.Comunidade;
 
 
 public interface Perfil {
@@ -25,19 +21,16 @@ public interface Perfil {
             abstract void mostrarSolicitacoes();
             abstract void removeSolicitacao(Solicitacao sol);
             abstract void recebeSolicitacao(Solicitacao sol);
-            // abstract boolean respoderSolicitacao(Solicitacao sol, int i); //acho que isso é coisa do iFace também
         //amizades
             abstract void mostrarAmigos();
             abstract int qtdAmigos();
             abstract void adicionarAmigo(Amigo amigo);
-            // abstract void removerAmigoLogin(String login);
+            abstract void removerAmigo(Amigo amigo);
             abstract int verificarAmizade(String login);
             //mensagens
             abstract int qtdMensagens();
             abstract void mostrarMensagens();
             abstract void receberMensagem(String loginRemetente, Mensagem msg);
-            // abstract boolean enviarMensagem(Mensagem msg);
-            // abstract void novaMensagem(Mensagem msg); //essa deve somente colocar a nova lá dentro; o processo que, faz é o iFace
     //comunidades
             abstract boolean criarComunidade(Comunidade comunidade);
             abstract boolean apagarComundidade();
@@ -47,5 +40,6 @@ public interface Perfil {
             abstract boolean eDono(Comunidade comunidade);
             abstract void virarMembro(Comunidade comunidade);
             abstract void mostrarComunidadesMembro();
+            abstract void removerComunidadeMembro(String nome);
         abstract void resumoDaConta();
 }

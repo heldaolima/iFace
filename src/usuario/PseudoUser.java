@@ -1,9 +1,9 @@
-package main;
+package src.usuario;
 
 public class PseudoUser {
     private String nome, login;
 
-    PseudoUser(String nome, String login) {
+    public PseudoUser(String nome, String login) {
         this.nome = nome;
         this.login = login;
     }
