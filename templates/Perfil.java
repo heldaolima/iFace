@@ -30,7 +30,7 @@ public interface Perfil {
             abstract void mostrarAmigos();
             abstract int qtdAmigos();
             abstract void adicionarAmigo(Amigo amigo);
-            // abstract void removerAmigo(String login);
+            // abstract void removerAmigoLogin(String login);
             abstract int verificarAmizade(String login);
             //mensagens
             abstract int qtdMensagens();

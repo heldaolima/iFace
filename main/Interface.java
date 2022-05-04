@@ -32,6 +32,8 @@ public class Interface {
                     else 
                         System.out.println("Logado com sucesso! Bem vind@, "+ logado.getNome());
                 }
+                else 
+                    System.out.println("\nEntrada inválida! \n");
             }
             else {
                 System.out.println("[1] Adicionar atributo\n[2] Editar atributo\n[3] Enviar solicitação de amizade\n[4] Responder solicitação de amizade\n[5] Enviar mensagem\n[6] Criar comunidade\n[7] Entrar em comunidade\n[8] Visualizar feed de notícias\n[9] Publicar no feed de notícias\n[10] Resumo da conta\n[11] Sair\n[12] Excluir conta");
@@ -111,6 +113,15 @@ public class Interface {
                     logado = iFace.logOut(logado);
                     iFace.mostrarUsuarios();
                 }
+                else if (escolha == 12) {
+                    titulo("Exclusão da conta");
+                    if (iFace.excluirConta(logado)) {
+                        System.out.println("Conta excluída");
+                        logado = null;
+                    }
+                    else
+                        System.out.println("Exclusão de conta cancelada");
+                }
             }
         }
         sc.close();
@@ -119,5 +130,4 @@ public class Interface {
     public static void titulo(String nome) {
         System.out.println("-=-=- "+nome+" -=-=-");
     }
-
 }

@@ -21,4 +21,11 @@ public class FeediFace implements Feed{
     public void apagarPost(Publicacao post) {
         this.publicacoes.remove(post);        
     }
+
+    public void usuarioExcluido(PseudoUser excluido) {
+        for (Publicacao publi: publicacoes) {
+            if (publi.getAutor().equals(excluido)) 
+                publicacoes.remove(publi);
+        }
+    }
 }

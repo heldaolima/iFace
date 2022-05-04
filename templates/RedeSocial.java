@@ -18,4 +18,5 @@ public interface RedeSocial {
     abstract boolean publicarNoFeed(Logado logado);
     abstract void resumoDaConta(Logado logado);
     abstract Logado logOut(Logado logado);
+    abstract boolean excluirConta(Logado logado);
 }

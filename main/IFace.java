@@ -3,16 +3,13 @@ package main;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import javax.lang.model.util.ElementScanner14;
-
 import templates.RedeSocial;
 
 public class IFace implements RedeSocial {
-    // protected Logado logado = null;
-    protected PseudoUser pseudoLogado = null;
     private ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
-    protected ArrayList<Comunidade> comunidades = new ArrayList<Comunidade>();
     protected FeediFace feed = new FeediFace();
+    protected ArrayList<Comunidade> comunidades = new ArrayList<Comunidade>();
+    protected PseudoUser pseudoLogado = null;
     public Scanner sc = new Scanner(System.in);
 
     @Override
@@ -55,7 +52,10 @@ public class IFace implements RedeSocial {
     public Logado login() {
         System.out.print("Insira o seu login: ");        
         Usuario user = getUsuario(sc.nextLine());
-
+        if (user == null) {
+            System.out.println("Usuário não encontrado");
+            return null;
+        }
         System.out.print("Insira a sua senha: ");
         if (user != null && user.getSenha().equals(sc.nextLine())) {
             usuarios.remove(user); //temporariamente removido
@@ -157,8 +157,10 @@ public class IFace implements RedeSocial {
         int i = sc.nextInt();
         sc.nextLine();
 
-        if (i < 0 || i >= usuarios.size() || !disponiveis.contains(i))
+        if (i < 0 || i >= usuarios.size() || !disponiveis.contains(i)) {
+            System.out.println("Entrada inválida");
             return false;
+        }
         
         Solicitacao sol = new Solicitacao(logado.getNome(), logado.getLogin(), logado.qtdAmigos());
         
@@ -174,7 +176,7 @@ public class IFace implements RedeSocial {
             return false;
         }
         logado.mostrarSolicitacoes();
-        System.out.println("Responder solicitção de [índice]: ");
+        System.out.print("Responder solicitção de [índice]: ");
         int i = sc.nextInt();
         sc.nextLine();
         i--;
@@ -211,7 +213,7 @@ public class IFace implements RedeSocial {
         }
         System.out.println("Você tem "+logado.qtdAmigos()+" amigos");
         logado.mostrarAmigos();
-        System.out.println("Enviar mensagem para (índice): ");
+        System.out.print("Enviar mensagem para (índice): ");
         int i = sc.nextInt();
         sc.nextLine();
         i--;
@@ -242,8 +244,8 @@ public class IFace implements RedeSocial {
         System.out.println("Insira -1 no lugar do nome ou da descrição para cancelar");
         System.out.print("Insira o nome da comunidade: ");
         String nome = sc.nextLine();
-        while (nome == null || nome == "") {
-            System.out.print("Entrada inválida! Insira o nome da comunidade: ");
+        while (nome == null || nome == "" || nomeComunidadeUsado(nome)) {
+            System.out.print("Nome inválido ou já utilizado. Insira o nome da comunidade: ");
             nome = sc.nextLine();
         }
         
@@ -340,6 +342,32 @@ public class IFace implements RedeSocial {
         pseudoLogado = null;
         return null;
     }
+
+    @Override
+    public boolean excluirConta(Logado logado) {
+        System.out.println("Para confirmar a operação, insira a sua senha novamente: ");
+        if (!logado.getSenha().equals(sc.nextLine())) {
+            System.out.println("A senha insira não é a da sua conta");
+            return false;
+        }
+        System.out.println("Excluindo sua conta...");
+
+        comunidades.remove(logado.comunidade);
+
+        for (Usuario user: usuarios) {
+            Amigo Amigologado = user.getAmigo(logado.getLogin());
+            Solicitacao solicitacaoLogado = user.getSolicitacao(logado.getLogin());
+            
+            user.removerAmigo(Amigologado);
+            user.removeSolicitacao(solicitacaoLogado);
+            user.removerComunidadeMembro(logado.comunidade.getNome());
+        }
+
+        feed.usuarioExcluido(pseudoLogado);
+        pseudoLogado = null;
+
+        return true;
+    }
     
     public Usuario getUsuario(String login) {
         for (Usuario user: usuarios) {
@@ -374,6 +402,14 @@ public class IFace implements RedeSocial {
             i++;
         }
         return ans;
+    }
+
+    public boolean nomeComunidadeUsado(String nome) {
+        for (Comunidade com: comunidades) {
+            if (com.getNome().equals(nome)) 
+                return true;
+        }
+        return false;
     }
 
     public int qtdComunidades() {

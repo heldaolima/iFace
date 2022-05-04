@@ -267,6 +267,14 @@ public class Usuario implements Perfil {
         return solicitacoes.get(i);
     }
 
+    public Solicitacao getSolicitacao(String login) {
+        for (Solicitacao sol: solicitacoes) {
+            if (sol.getLogin().equals(login))
+                return sol;
+        }
+        return null;
+    }
+
     public int verificarSolicitacao(String login) {
         int i = 0;
         for (Solicitacao sol: solicitacoes) {
@@ -281,9 +289,23 @@ public class Usuario implements Perfil {
         return amigos.get(i);
     }
 
+    public Amigo getAmigo(String login) {
+        for (Amigo a: amigos) {
+            if (a.getLogin().equals(login))
+                return a;
+        }
+        return null;
+    } 
+
     public Atributo getAtributo(int i) {
         return atributos.get(i);
     }
 
+    public void removerAmigo(Amigo amigo) {
+        this.amigos.remove(amigo);
+    }
 
+    public void removerComunidadeMembro(String nome) {
+        comunidadesMembro.remove(nome);
+    }
 }

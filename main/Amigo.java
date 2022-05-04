@@ -2,18 +2,15 @@ package main; //ele deve ter acesso ao package da rede E o do usuário, mas só 
 import java.util.ArrayList;
 
 public class Amigo extends PseudoUser {
-    
-    protected String nome, login;
     protected ArrayList<Mensagem> mensagens = new ArrayList<Mensagem>();
 
     Amigo(String nome, String login){
         super(nome, login);
-        // this.amizade = amizade;
     }
 
     public void SolicitacaoAceita(ArrayList<Usuario> usuarios, Usuario aceitou) {
         for (Usuario user: usuarios) {
-            if (user.getLogin().equals(this.login)) {
+            if (user.getLogin().equals(this.getLogin())) {
                 user.adicionarAmigo(new Amigo(aceitou.getNome(), aceitou.getLogin()));
             }
         }
