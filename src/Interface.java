@@ -114,7 +114,7 @@ public class Interface {
                 else if (escolha == 11) {
                     System.out.println("\nSaindo...\n");
                     logado = iFace.logOut(logado);
-                    iFace.mostrarUsuarios();
+                    // iFace.mostrarUsuarios();
                 }
                 else if (escolha == 12) {
                     titulo("Exclusão da conta");
