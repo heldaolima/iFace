@@ -2,7 +2,9 @@
 Trata-se da implementação de um sistema que mantém uma rede de relacionamentos, semelhante a uma rede social.
 
 ## Instruções de execução
-É a partir do arquivo `src/Interface.java` que a rede funciona. Lá estão os menus, e cada opção chama uma função da rede social, chamada *iFace*.
+É no arquivo `src/Interface.java` que a rede funciona. É preciso que ele seja executado a partir da pasta do projeto, e não de dentro de `src`.
+
+Lá estão os menus, e cada opção chama uma função da rede social, chamada *iFace*.
 
 O primeiro menu tem as opções:
 - [1] Criar conta
