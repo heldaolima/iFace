@@ -356,7 +356,8 @@ public class IFace implements RedeSocial {
         }
         System.out.println("Excluindo sua conta...");
 
-        comunidades.remove(logado.comunidade);
+        if (logado.temComunidade())
+            comunidades.remove(logado.comunidade);
 
         for (Usuario user: usuarios) {
             Amigo Amigologado = user.getAmigo(logado.getLogin());
@@ -364,7 +365,8 @@ public class IFace implements RedeSocial {
             
             user.removerAmigo(Amigologado);
             user.removeSolicitacao(solicitacaoLogado);
-            user.removerComunidadeMembro(logado.comunidade.getNome());
+            if (logado.temComunidade())
+                user.removerComunidadeMembro(logado.comunidade.getNome());
         }
 
         feed.usuarioExcluido(pseudoLogado);

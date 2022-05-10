@@ -24,9 +24,22 @@ public class FeediFace implements Feed{
         this.publicacoes.remove(post);        
     }
 
+    public ArrayList<Publicacao> getPublicacoes(PseudoUser user) {
+        ArrayList<Publicacao> publi = new ArrayList<Publicacao>();
+        for (Publicacao p: publicacoes) {
+            if (p.getAutor().equals(user))
+                publi.add(p);
+        }
+        return publi;
+    }
+
     public void usuarioExcluido(PseudoUser excluido) {
-        for (Publicacao publi: publicacoes) {
-            if (publi.getAutor().equals(excluido)) 
+        ArrayList<Publicacao> publiExcluido = getPublicacoes(excluido);
+        // System.out.println("Excluindo as publicações");
+        // for (Publicacao o: publiExcluido) {
+        //     System.out.println(o.toString());
+        // }
+        for (Publicacao publi: publiExcluido) {
                 publicacoes.remove(publi);
         }
     }
