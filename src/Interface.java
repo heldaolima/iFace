@@ -1,5 +1,4 @@
 package src;
-
 import java.util.Scanner;
 
 import src.RedeSocial.IFace;
