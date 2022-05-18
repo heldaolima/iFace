@@ -45,5 +45,5 @@ public interface Perfil {
             abstract void virarMembro(Comunidade comunidade);
             abstract void mostrarComunidadesMembro();
             abstract void removerComunidadeMembro(String nome);
-        abstract void resumoDaConta();
+    abstract void resumoDaConta();
 }

@@ -18,13 +18,13 @@ public class IFace implements RedeSocial {
     public Scanner sc = new Scanner(System.in);
 
     @Override
-    public boolean novaConta() {
+    public boolean novaConta(){
         String nome, login, senha;
         System.out.println("Caso queira cancelar, insira -1 no lugar do nome ou no lugar de login");
         System.out.print("Insira o seu nome e sobrenome: ");
         nome = sc.nextLine();
         
-        while (nome == "" || nome == null) {
+        while (nome == "" || nome == null || nome.equals(" ") || !nomeValido(nome)) {
             System.out.print("Nome inválido! Insira o seu nome e sobrenome:");
             nome = sc.nextLine();
         }
@@ -33,7 +33,7 @@ public class IFace implements RedeSocial {
         System.out.print("Crie um login: ");
         login = sc.nextLine();
         
-        while (login == "" || login == null || loginUsado(login) || !loginValido(login)) {
+        while (loginUsado(login) || !loginValido(login) || !entradaValida(login)) {
             System.out.print("Login inválido! Crie um login: ");
             login = sc.nextLine();
         }
@@ -43,7 +43,7 @@ public class IFace implements RedeSocial {
         System.out.print("Crie uma senha: ");
         senha = sc.nextLine();
 
-        while (senha == "" || senha == null) {
+        while (senha == "" || senha == null || allSpaces(senha)) { // pode ser tudo numero
             System.out.println("Senha inválida! Crie uma senha: ");
             senha = sc.nextLine();
         }
@@ -76,19 +76,31 @@ public class IFace implements RedeSocial {
         Atributo novo = new Atributo();
 
         System.out.print("Nome do atributo: ");
-        while (!novo.setNome(sc.nextLine()))
-            System.out.print("Nome do atributo: ");
+        String nome, desc;
+        nome = sc.nextLine();
+        while (!entradaValida(nome)) {
+            System.out.print("Nome inválido! Insira o nome do atributo: ");
+            nome = sc.nextLine();
+        }
 
-        if (novo.getNome().equals("-1")) 
+        if (nome.equals("-1") ) 
             return false;
-
-        System.out.print("Descrição do atributo: ");
-        while (!novo.setDescricao(sc.nextLine()))
-            System.out.print("Descrição do atributo: ");
+        else
+            novo.setNome(nome);
         
-        if (novo.getDescricao().equals("-1")) 
+        System.out.print("Descrição do atributo: ");
+        desc = sc.nextLine();
+        while (!entradaValida(desc)) {
+            System.out.print("Descrição inválida! Insira a descrição do atributo: ");
+            desc = sc.nextLine();
+        }
+        
+        if (desc.equals("-1"))
             return false;
-
+        else
+            novo.setDescricao(desc);
+        
+        System.out.println("Seu atributo: ");
         System.out.println(novo.toString());
 
         logado.novoAtributo(novo);
@@ -97,7 +109,7 @@ public class IFace implements RedeSocial {
     }
 
     @Override
-    public boolean editarAtributo(Logado logado) {
+    public boolean editarAtributo(Logado logado) throws IndexOutOfBoundsException{
         if (logado.qtdAtributos() == 0) {
             System.out.println("Não há atributos!");
             return false;
@@ -106,26 +118,46 @@ public class IFace implements RedeSocial {
         logado.mostrarAtributos();
         int i;
         System.out.print("Insira o número do atributo que quer modificar (-1 cancela): ");
-        i = sc.nextInt();
-        sc.nextLine();
-
-        i = i-1;
-        System.out.println("\nEditando: \n"+logado.getAtributo(i).toString()+"\n");
-
-        if (i < 0 || i >= logado.qtdAtributos()) return false;
         
+        while (true) {
+            try {
+                i = Integer.parseInt(sc.nextLine());
+                i = i-1;
+                break;
+            } catch(NumberFormatException e) {
+                System.err.println("Entrada inválida! Por favor, insira um número");
+            }
+
+        }
+        // System.out.println("Erro: você não inseriu um número");
+
+        
+        System.out.println("\nEditando: \n"+logado.getAtributo(i).toString()+"\n");
+        // Pode dar IndexOutOfBoundsException
+
         int esc = 0;
         while (esc != -1) {
             System.out.println("[1] Editar nome\n[2] Editar descrição\n[-1] Encerrar");
             System.out.print("Escolha: ");
-            esc = sc.nextInt();
-            sc.nextLine();
+            while (true) {
+                try {
+                    esc = Integer.parseInt(sc.nextLine());
+                    if (esc != -1 && (esc < 0 || esc > 2)) {
+                        System.out.println("Entrada inválida! Por favor, insira um número disponível no menu!");
+                        esc = Integer.parseInt(sc.nextLine());
+                    }
+                    break;
+                } catch(NumberFormatException e) {
+                    System.out.println("Entrada inválida! Por favor, insira um número");
+                }
+
+            }
             
             String novo;
             if (esc == 1) {
                 System.out.print("\nInsira o novo nome: ");
                 novo = sc.nextLine();
-                while (novo == null || novo == "") {
+                while (novo == null || novo == "" || novo.equals(" ")) {
                     System.out.print("Entrada inválida! Insira o novo nome: ");
                     novo = sc.nextLine();
                 }
@@ -136,12 +168,11 @@ public class IFace implements RedeSocial {
             else if (esc == 2) {
                 System.out.print("\nInsira a nova descrição: ");
                 novo = sc.nextLine();
-                while (novo == null || novo == "") {
+                while (novo == null || novo == "" || novo.equals(" ")) {
                     System.out.print("Entrada inválida! Insira a nova descrição: ");
                     novo = sc.nextLine();
                 }
-                if (novo == "-1") return false;
-
+                if (novo.equals("-1")) return false;
                 logado.editarAtributoDescricao(i, novo);
             }
         }
@@ -149,7 +180,7 @@ public class IFace implements RedeSocial {
     }
 
     @Override
-    public boolean enviarSolicitacao(Logado logado) {
+    public boolean enviarSolicitacao(Logado logado) throws IndexOutOfBoundsException{
         ArrayList<Integer> disponiveis = mostrarUsuariosSolicitacao(logado);
         
         if (disponiveis.size() == 0) {
@@ -158,12 +189,16 @@ public class IFace implements RedeSocial {
         }
 
         System.out.print("Mandar solicitação para [índice]: ");
-        int i = sc.nextInt();
-        sc.nextLine();
+        int i;
 
-        if (i < 0 || i >= usuarios.size() || !disponiveis.contains(i)) {
-            System.out.println("Entrada inválida");
-            return false;
+        while (true) {
+            try {
+                i = Integer.parseInt(sc.nextLine());
+                break;
+            } catch(NumberFormatException e) {
+                System.err.println("Entrada inválida! Por favor, insira um número");
+            }
+
         }
         
         Solicitacao sol = new Solicitacao(logado.getNome(), logado.getLogin(), logado.qtdAmigos());
@@ -174,30 +209,51 @@ public class IFace implements RedeSocial {
     }
 
     @Override
-    public boolean responderSolicitacao(Logado logado) {
+    public boolean responderSolicitacao(Logado logado) throws IndexOutOfBoundsException {
+        
         if (logado.qtdSolicitacoes() == 0) {
             System.out.println("Não há solicitações");
             return false;
         }
+
         logado.mostrarSolicitacoes();
         System.out.print("Responder solicitção de [índice]: ");
-        int i = sc.nextInt();
-        sc.nextLine();
-        i--;
         
-        if (i < 0 || i >= logado.qtdSolicitacoes()) {
-            System.out.println("Entrada inválida");
+        int i;
+        while (true) {
+            try {
+                i = Integer.parseInt(sc.nextLine());
+                i--;
+                break;
+            } catch (NumberFormatException e) {
+                System.err.println("Entrada inválida! Por favor, insira um número");
+            }
+
+        }
+
+        System.out.println("Usuário "+logado.getSolicitacao(i));
+        // Pode lançar o indexOutOfBounds
+        System.out.println("[1] Aceitar\n[2] Recusar\n[-1] Cancelar");
+        System.out.print("Escolha: ");
+        
+        int esc;
+        while (true) {
+            try {
+                esc = Integer.parseInt(sc.nextLine());
+                while ((esc < 1 || esc > 2) && esc != -1) {
+                    System.out.println("Entrada inválida! Por favor, insira um número disponível no menu!");
+                    esc = Integer.parseInt(sc.nextLine());
+                }
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println("Entrada inválida! Por favor, insira um número!");
+            }
+        }
+        
+        if (esc == -1) {
             return false;
         }
 
-        System.out.println("[1] Aceitar\n[2] Recusar\n[-1] Cancelar");
-        System.out.print("Escolha: ");
-        int esc = sc.nextInt();
-        sc.nextLine(); 
-        
-        if (esc < 0 || esc > 2) 
-            return false;
-        
         else if (esc == 2) {
             logado.solicitacoes.remove(logado.getSolicitacao(i));
             System.out.println("Solicitação recusada");
@@ -206,32 +262,42 @@ public class IFace implements RedeSocial {
             logado.respoderSolicitacao(logado.getSolicitacao(i), usuarios);   
         
         return true;
-        
     }
 
     @Override
-    public boolean enviarMensagem(Logado logado) {
+    public boolean enviarMensagem(Logado logado) throws IndexOutOfBoundsException{
         if (logado.qtdAmigos() == 0) {
             System.out.println("Você tem 0 amigos");
             return false;
         }
+
         System.out.println("Você tem "+logado.qtdAmigos()+" amigos");
         logado.mostrarAmigos();
         System.out.print("Enviar mensagem para (índice): ");
-        int i = sc.nextInt();
-        sc.nextLine();
-        i--;
-        if (i < 0 || i >= logado.qtdAmigos()) {
-            System.out.println("Entrada inválida");
-            return false;
+        
+        int i;
+        while (true) {
+            try {
+                i = Integer.parseInt(sc.nextLine());
+                i--;
+                break;
+            } catch (NumberFormatException e) {
+                System.err.println("Entrada inválida! Por favor, insira um número");
+            }
+
         }
        
-       logado.getAmigo(i).mostrarMensagens();
+       logado.getAmigo(i).mostrarMensagens(); //pode lançar o indexOutOfBounds
 
         Mensagem msg = new Mensagem();
         msg.setSender(logado.getLogin());
         System.out.println("Insira a nova mensgem: ");
-        msg.setContent(sc.nextLine());
+        
+        String content = sc.nextLine();
+        while (content == null || content.equals("") || content.equals(" ")) {
+            System.out.println("Entrada inválida! Por favor, insira uma nova mensagem válida:");
+            msg.setContent(sc.nextLine());
+        }
 
         logado.getAmigo(i).novaMensagem(msg); //o amigo tem a mensagem;
 
@@ -248,7 +314,7 @@ public class IFace implements RedeSocial {
         System.out.println("Insira -1 no lugar do nome ou da descrição para cancelar");
         System.out.print("Insira o nome da comunidade: ");
         String nome = sc.nextLine();
-        while (nome == null || nome == "" || nomeComunidadeUsado(nome)) {
+        while (nome == null || nome == "" || nomeComunidadeUsado(nome) || !entradaValida(nome)) {
             System.out.print("Nome inválido ou já utilizado. Insira o nome da comunidade: ");
             nome = sc.nextLine();
         }
@@ -258,7 +324,7 @@ public class IFace implements RedeSocial {
         
         System.out.print("Insira a descrição da comunidade: ");
         String descricao = sc.nextLine();
-        while (descricao == null || descricao == "") {
+        while (descricao == null || descricao == "" || !entradaValida(descricao)) {
             System.out.print("Entrada inválida! Insira a descrição da comunidade: ");
             descricao = sc.nextLine();
         }
@@ -439,4 +505,43 @@ public class IFace implements RedeSocial {
             System.out.println(u.dadosBasicos());
         }
     }
+
+    // não pode ser tudo espaço nem ter números
+    public boolean nomeValido(String entrada) {
+        char[] chars = entrada.toCharArray();
+        for (char c: chars) {
+            if (Character.isDigit(c))
+                return false;
+        }
+
+        return entradaValida(entrada);
+    }
+
+    public boolean entradaValida(String entrada) {
+        if (entrada.equals("") || entrada == null)
+            return false;
+
+        char[] chars = entrada.toCharArray();
+        int contSpaces = 0, contNumbers = 0;
+        for (char c: chars) {
+            if (Character.isSpaceChar(c)) 
+                contSpaces++;
+            else if (Character.isDigit(c))
+                contNumbers++;
+        }
+        if (contSpaces == entrada.length() || contNumbers == entrada.length()) 
+            return false;
+        return true;
+    }
+
+    public boolean allSpaces(String entrada) {
+        char[] chars = entrada.toCharArray();
+        int contSpaces = 0;
+        for (char c: chars) {
+            if (Character.isSpaceChar(c)) 
+                contSpaces++;
+        }
+        return contSpaces == entrada.length();
+    }
+
 }

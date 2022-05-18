@@ -21,7 +21,7 @@ public class FeediFace implements Feed{
 
     @Override
     public void apagarPost(Publicacao post) {
-        this.publicacoes.remove(post);        
+        this.publicacoes.remove(post);
     }
 
     public ArrayList<Publicacao> getPublicacoes(PseudoUser user) {

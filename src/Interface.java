@@ -1,4 +1,5 @@
 package src;
+import java.text.spi.NumberFormatProvider;
 import java.util.Scanner;
 
 import src.RedeSocial.IFace;
@@ -10,14 +11,20 @@ public class Interface {
         IFace iFace = new IFace();
         Scanner sc = new Scanner(System.in);
         int escolha = 0;
-
+        
         while (escolha != -1) {
             titulo("iFace");
             if (logado == null) {
                 System.out.println("[1] Criar conta\n[2] Fazer login\n[-1] Fechar");
                 System.out.print("Escolha: ");
-                escolha = sc.nextInt();
-                sc.nextLine();
+
+                try {
+                    escolha = Integer.parseInt(sc.nextLine());
+                    if (escolha != 1 && escolha != 2 && escolha != -1) 
+                        System.out.println("\nEntrada inválida! Por favor, insira um número válido!\n");
+                } catch (NumberFormatException e) {
+                    System.err.println("\nEntrada inválida. Por favor, insira um número\n");
+                }
 
                 if (escolha == 1) {
                         titulo("Criação de conta");
@@ -34,14 +41,19 @@ public class Interface {
                     else 
                         System.out.println("\nLogado com sucesso! Bem vind@, "+ logado.getNome());
                 }
-                else if (escolha != -1)
-                    System.out.println("\nEntrada inválida! \n");
             }
             else {
                 System.out.println("[1] Adicionar atributo\n[2] Editar atributo\n[3] Enviar solicitação de amizade\n[4] Responder solicitação de amizade\n[5] Enviar mensagem\n[6] Criar comunidade\n[7] Entrar em comunidade\n[8] Visualizar feed de notícias\n[9] Publicar no feed de notícias\n[10] Resumo da conta\n[11] Sair\n[12] Excluir conta");
                 System.out.print("Escolha: ");
-                escolha = sc.nextInt();
-                sc.nextLine();
+                try {
+                    escolha = Integer.parseInt(sc.nextLine());
+                    if (escolha < 1 || escolha > 12) 
+                        System.out.println("\nEntrada inválida. Por favor, insira um número disponível no menu!\n");
+                } catch (NumberFormatException e) {
+                    System.err.println("\nEntrada inválida. Por favor, insira um número!\n");
+                } 
+
+
                 if (escolha == 1) {
                     titulo("Novo atributo");
                     if (iFace.novoAtributo(logado))
@@ -52,33 +64,51 @@ public class Interface {
 
                 else if (escolha == 2) {
                     titulo("Edição de atributo");
-                    if (iFace.editarAtributo(logado))
-                        System.out.println("\nEdição concluída\n");
-                    else 
-                        System.out.println("\nEdição cancelada\n");
+                    
+                    try {
+                        if (iFace.editarAtributo(logado)) {
+                            System.out.println("\nEdição concluída\n");
+                        }
+                        else {
+                            System.out.println("\nEdição cancelada\n");
+                        }
+                    } catch(IndexOutOfBoundsException e) {
+                        System.err.println("\nErro! Atributo não encontrado\n");
+                    }
                 }
-
                 else if (escolha == 3) {
                     titulo("Enviar solicitacao");
-                    if (iFace.enviarSolicitacao(logado))
-                        System.out.println("\nSolicitação enviada!\n");
-                    else 
-                        System.out.println("\nEnvio de solicitação cancelado\n");
+                    try {
+                        if (iFace.enviarSolicitacao(logado))
+                            System.out.println("\nSolicitação enviada!\n");
+                        else 
+                            System.out.println("\nEnvio de solicitação cancelado\n");
+                    } catch (IndexOutOfBoundsException e) {
+                        System.err.println("\nErro! Usuário não encontrado!");
+                    }
                 }
 
                 else if (escolha == 4) {
                     titulo("Responder solicitacao");
-                    if (iFace.responderSolicitacao(logado))
-                        System.out.println("\nSolicitação respondida\n");
-                    else 
-                        System.out.println("\nResposta cancelada\n");
+                    try {
+                        if (iFace.responderSolicitacao(logado))
+                            System.out.println("\nSolicitação respondida\n");
+                        else 
+                            System.out.println("\nResposta cancelada\n");
+                    } catch (IndexOutOfBoundsException e) {
+                        System.err.println("\nErro! Usuário não encontrado!\n");
+                    }
                 }
                 else if (escolha == 5) {
                     titulo("Enviar mensagem");
-                    if (iFace.enviarMensagem(logado))
-                        System.out.println("\nMensagem enviada\n");
-                    else
-                        System.out.println("\nEnvio de mensagem cancelado\n");
+                    try {
+                        if (iFace.enviarMensagem(logado))
+                            System.out.println("\nMensagem enviada\n");
+                        else
+                            System.out.println("\nEnvio de mensagem cancelado\n");
+                    } catch (IndexOutOfBoundsException e) {
+                        System.err.println("\nErro! Amigo não encontrado!\n");
+                    }
                 }
                 else if (escolha == 6) {
                     titulo("Criar comunidade");
@@ -113,7 +143,7 @@ public class Interface {
                 else if (escolha == 11) {
                     System.out.println("\nSaindo...\n");
                     logado = iFace.logOut(logado);
-                    // iFace.mostrarUsuarios();
+                    iFace.mostrarUsuarios();
                 }
                 else if (escolha == 12) {
                     titulo("Exclusão da conta");
@@ -124,8 +154,6 @@ public class Interface {
                     else
                         System.out.println("\nExclusão de conta cancelada\n");
                 }
-                else
-                    System.out.println("\nEntrada inválida\n");
             }
         }
         System.out.println("\nEncerrando...\n");

@@ -4,14 +4,14 @@ public class Atributo {
     private String nome, descricao;
 
     public boolean setNome(String nome) {
-        if (nome == null || nome =="")
+        if (nome == null || nome =="" || nome.equals(" "))
             return false;
         this.nome = nome;
             return true;
     }
 
     public boolean setDescricao(String desc) {
-        if (desc == null || desc == "")
+        if (desc == null || desc == "" || desc.equals(" "))
             return false;
         this.descricao = desc;
         return true;

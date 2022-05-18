@@ -7,12 +7,12 @@ import src.usuario.Amigo;
 import src.usuario.Atributo;
 import src.usuario.Mensagem;
 import src.usuario.Solicitacao;
+import src.usuario.PseudoUser;
 
 public class Usuario implements Perfil {
-
     private String nome, login, senha;
-    protected ArrayList<Amigo> amigos = new ArrayList<Amigo>();
-    protected ArrayList<Solicitacao> solicitacoes = new ArrayList<Solicitacao>();
+    protected ArrayList<Amigo> amigos = new ArrayList<>();
+    protected ArrayList<Solicitacao> solicitacoes = new ArrayList<>();
     protected Comunidade comunidade = null;
     protected ArrayList<String> comunidadesMembro = new ArrayList<String>();
     protected ArrayList<Atributo> atributos = new ArrayList<Atributo>();
@@ -118,7 +118,7 @@ public class Usuario implements Perfil {
     @Override
     public void mostrarAmigos() {
         int i = 1;
-        for (Amigo amigo : amigos) {
+        for (PseudoUser amigo : amigos) {
             System.out.println("["+i+"] "+amigo.toString());
             i++;
         }
