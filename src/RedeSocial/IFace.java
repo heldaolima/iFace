@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import src.RedeSocial.abstratas.RedeSocial;
+import src.RedeSocial.customExceptions.EntradaVaziaException;
 import src.RedeSocial.customExceptions.LoginInvalidoException;
-import src.RedeSocial.customExceptions.NomeInvalidoException;
+import src.RedeSocial.customExceptions.EntradaInvalidaException;
 import src.RedeSocial.customExceptions.SenhaInvalidaException;
 import src.usuario.Amigo;
 import src.usuario.Atributo;
@@ -20,10 +21,19 @@ public class IFace implements RedeSocial {
     protected PseudoUser pseudoLogado = null;
     public Scanner sc = new Scanner(System.in);
 
-    public String lerSenha() throws SenhaInvalidaException {
+    public String lerDescricao() throws EntradaVaziaException, EntradaInvalidaException {
+        String descricao = sc.nextLine();
+        if (!entradaValida(descricao))
+            throw new EntradaVaziaException();
+        else if (allSpaces(descricao))
+            throw new EntradaInvalidaException("A descrição não pode ser só de espaços.");
+        return descricao;
+    }
+
+    public String lerSenha() throws SenhaInvalidaException, EntradaVaziaException {
         String senha = sc.nextLine();
         if (!entradaValida(senha))
-            throw new SenhaInvalidaException();
+            throw new EntradaVaziaException();
         else if (allSpaces(senha))
             throw new SenhaInvalidaException("A sua senha não pode ser só de espaços.");
         else if (senha.length() < 6)
@@ -31,10 +41,10 @@ public class IFace implements RedeSocial {
         return senha;
     }
 
-    public String lerLogin() throws LoginInvalidoException {
+    public String lerLogin() throws LoginInvalidoException, EntradaVaziaException {
         String login = sc.nextLine();
         if (!entradaValida(login)) 
-            throw new LoginInvalidoException();
+            throw new EntradaVaziaException();
         else if (loginUsado(login))
             throw new LoginInvalidoException("Este login já está em uso.");    
         else if (!loginValido(login))
@@ -44,14 +54,14 @@ public class IFace implements RedeSocial {
         return login;
     }
 
-    public String lerNome() throws NomeInvalidoException {
+    public String ler() throws EntradaInvalidaException, EntradaVaziaException {
         String nome = sc.nextLine();
         if (!entradaValida(nome)) 
-            throw new NomeInvalidoException();
+            throw new EntradaVaziaException();
         else if (!nomeValido(nome))
-            throw new NomeInvalidoException("Nome inválido! O seu nome não pode conter números.");
+            throw new EntradaInvalidaException("A entrada não pode conter números.");
         else if (allSpaces(nome))
-            throw new NomeInvalidoException("Seu nome não pode ser só de espaços.");
+            throw new EntradaInvalidaException("A entrada pode ser só de espaços.");
         return nome;
     }
 
@@ -63,9 +73,9 @@ public class IFace implements RedeSocial {
         while (true) {
             try {
                 System.out.print("Insira o seu nome e sobrenome: ");
-                nome = lerNome();
+                nome = ler();
                 break;
-            } catch (NomeInvalidoException e) {
+            } catch (EntradaInvalidaException | EntradaVaziaException e) {
                 System.err.println(e.getMessage());
             }
         }
@@ -77,7 +87,7 @@ public class IFace implements RedeSocial {
                 System.out.print("Crie um login: ");
                 login = lerLogin();
                 break;
-            } catch (LoginInvalidoException e) {
+            } catch (LoginInvalidoException | EntradaVaziaException e) {
                 System.err.println(e.getMessage());
             }
         }
@@ -91,7 +101,7 @@ public class IFace implements RedeSocial {
                 System.out.print("Crie uma senha: ");
                 senha = lerSenha();
                 break;
-            } catch (SenhaInvalidaException e) {
+            } catch (SenhaInvalidaException | EntradaVaziaException e) {
                 System.err.println(e.getMessage());
             }
         }
@@ -105,7 +115,7 @@ public class IFace implements RedeSocial {
         System.out.print("Insira o seu login: ");        
         Usuario user = getUsuario(sc.nextLine());
         if (user == null) {
-            System.out.println("Usuário não encontrado");
+            System.out.println("Usuário não encontrado.");
             return null;
         }
         System.out.print("Insira a sua senha: ");
@@ -123,29 +133,35 @@ public class IFace implements RedeSocial {
 
         Atributo novo = new Atributo();
 
-        System.out.print("Nome do atributo: ");
         String nome, desc;
-        nome = sc.nextLine();
-        while (!entradaValida(nome)) {
-            System.out.print("Nome inválido! Insira o nome do atributo: ");
-            nome = sc.nextLine();
+        while (true) {
+            try {
+                System.out.print("Nome do atributo: ");
+                nome = ler();
+                break;
+            } catch (EntradaInvalidaException | EntradaVaziaException e) {
+                System.err.println(e.getMessage());
+            }
         }
 
         if (nome.equals("-1") ) 
             return false;
-        else
-            novo.setNome(nome);
         
-        System.out.print("Descrição do atributo: ");
-        desc = sc.nextLine();
-        while (!entradaValida(desc)) {
-            System.out.print("Descrição inválida! Insira a descrição do atributo: ");
-            desc = sc.nextLine();
+        novo.setNome(nome);
+        
+        while (true) {
+            try {
+                System.out.print("Descrição do atributo: ");
+                desc = lerDescricao();
+                break;
+            } catch (EntradaInvalidaException | EntradaVaziaException e) {
+                
+            }
         }
-        
+
         if (desc.equals("-1"))
             return false;
-        else
+
             novo.setDescricao(desc);
         
         System.out.println("Seu atributo: ");
@@ -177,12 +193,8 @@ public class IFace implements RedeSocial {
             }
 
         }
-        // System.out.println("Erro: você não inseriu um número");
-
         
         System.out.println("\nEditando: \n"+logado.getAtributo(i).toString()+"\n");
-        // Pode dar IndexOutOfBoundsException
-
         int esc = 0;
         while (esc != -1) {
             System.out.println("[1] Editar nome\n[2] Editar descrição\n[-1] Encerrar");
@@ -191,7 +203,7 @@ public class IFace implements RedeSocial {
                 try {
                     esc = Integer.parseInt(sc.nextLine());
                     if (esc != -1 && (esc < 0 || esc > 2)) {
-                        System.out.println("Entrada inválida! Por favor, insira um número disponível no menu!");
+                        System.out.println("Entrada inválida. Insira um número disponível no menu");
                         esc = Integer.parseInt(sc.nextLine());
                     }
                     break;
@@ -203,11 +215,14 @@ public class IFace implements RedeSocial {
             
             String novo;
             if (esc == 1) {
-                System.out.print("\nInsira o novo nome: ");
-                novo = sc.nextLine();
-                while (novo == null || novo == "" || novo.equals(" ")) {
-                    System.out.print("Entrada inválida! Insira o novo nome: ");
-                    novo = sc.nextLine();
+                while (true) {
+                    try {
+                        System.out.print("\nInsira o novo nome: ");
+                        novo = ler();
+                        break;
+                    } catch (EntradaInvalidaException | EntradaVaziaException e) {
+                        System.err.println(e.getMessage());
+                    }
                 }
                 if (novo == "-1") return false;
 
@@ -215,10 +230,13 @@ public class IFace implements RedeSocial {
             }
             else if (esc == 2) {
                 System.out.print("\nInsira a nova descrição: ");
-                novo = sc.nextLine();
-                while (novo == null || novo == "" || novo.equals(" ")) {
-                    System.out.print("Entrada inválida! Insira a nova descrição: ");
-                    novo = sc.nextLine();
+                while (true) {
+                    try {
+                        novo = lerDescricao();
+                        break;
+                    } catch (EntradaInvalidaException | EntradaVaziaException e) {
+                        System.err.println(e.getMessage());
+                    }
                 }
                 if (novo.equals("-1")) return false;
                 logado.editarAtributoDescricao(i, novo);
