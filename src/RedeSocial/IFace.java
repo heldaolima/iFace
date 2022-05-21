@@ -4,10 +4,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import src.RedeSocial.abstratas.RedeSocial;
-import src.RedeSocial.customExceptions.EntradaVaziaException;
-import src.RedeSocial.customExceptions.LoginInvalidoException;
-import src.RedeSocial.customExceptions.EntradaInvalidaException;
-import src.RedeSocial.customExceptions.SenhaInvalidaException;
+import src.RedeSocial.customExceptions.*;
 import src.usuario.Amigo;
 import src.usuario.Atributo;
 import src.usuario.Mensagem;
@@ -329,11 +326,11 @@ public class IFace implements RedeSocial {
     }
 
     @Override
-    public boolean enviarMensagem(Logado logado) throws IndexOutOfBoundsException{
-        if (logado.qtdAmigos() == 0) {
-            System.out.println("Você tem 0 amigos");
-            return false;
-        }
+    public boolean enviarMensagem(Logado logado) 
+            throws IndexOutOfBoundsException, ZeroAmigosException{
+        
+        if (logado.qtdAmigos() == 0) 
+            throw new ZeroAmigosException();
 
         System.out.println("Você tem "+logado.qtdAmigos()+" amigos");
         logado.mostrarAmigos();
@@ -374,28 +371,36 @@ public class IFace implements RedeSocial {
     }
 
     @Override
-    public boolean novaComunidade(Logado logado) {
-        if (logado.temComunidade()) {
-            System.out.println("Esta conta já criou uma comunidade:");
-            System.out.println(logado.comunidadeToString());
-            return false;
-        }
+    public boolean novaComunidade(Logado logado) throws ComunidadeCriadaException{
+        if (logado.temComunidade())
+            throw new ComunidadeCriadaException();
+
         System.out.println("Insira -1 no lugar do nome ou da descrição para cancelar");
-        System.out.print("Insira o nome da comunidade: ");
-        String nome = sc.nextLine();
-        while (nome == null || nome == "" || nomeComunidadeUsado(nome) || !entradaValida(nome)) {
-            System.out.print("Nome inválido ou já utilizado. Insira o nome da comunidade: ");
-            nome = sc.nextLine();
+        String nome;
+        while (true) {
+            try {
+                System.out.print("Insira o nome da comunidade: ");
+                nome = ler();
+                break;
+            } catch (EntradaInvalidaException | EntradaVaziaException e) {
+                System.err.println(e.getMessage());
+            }
+
         }
         
         if (nome.equals("-1")) 
             return false;
-        
-        System.out.print("Insira a descrição da comunidade: ");
-        String descricao = sc.nextLine();
-        while (descricao == null || descricao == "" || !entradaValida(descricao)) {
-            System.out.print("Entrada inválida! Insira a descrição da comunidade: ");
-            descricao = sc.nextLine();
+
+        String descricao;
+        while (true) {
+            try {
+                System.out.print("Insira a descrição da comunidade: ");
+                descricao = lerDescricao();
+                break;
+                
+            } catch (EntradaInvalidaException | EntradaVaziaException e) {
+                System.err.println(e.getMessage());
+            }
         }
 
         if (descricao.equals("-1")) return false;
@@ -407,23 +412,26 @@ public class IFace implements RedeSocial {
     }
 
     @Override
-    public boolean virarMembroComunidade(Logado logado) {
+    public boolean virarMembroComunidade(Logado logado) 
+                throws ZeroComunidadesException, IndexOutOfBoundsException{
+        
         ArrayList<Integer> disponiveis = mostrarComunidades(logado);
-        if (disponiveis.size() == 0) {
-            System.out.println("Não há comunidades disponíveis");
-            return false;
-        }
+        if (disponiveis.size() == 0) 
+            throw new ZeroComunidadesException();
 
         System.out.println("Entrar na comunidade (indice): ");
-        int esc = sc.nextInt();
-        sc.nextLine();
-        
-        if (!disponiveis.contains(esc)) {
-            System.out.println("Entrada inválida");
-            return false;
+        int esc;
+        while (true) {
+            try {
+                esc = Integer.parseInt(sc.nextLine()); 
+                break;
+            } catch(NumberFormatException e) {
+                System.err.print("Entrada inválida. Insira um número: ");
+            }
         }
         
         comunidades.get(esc).addMembro(pseudoLogado);
+        
         logado.virarMembro(comunidades.get(esc));
 
         return true;

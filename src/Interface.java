@@ -3,6 +3,9 @@ import java.util.Scanner;
 
 import src.RedeSocial.IFace;
 import src.RedeSocial.Logado;
+import src.RedeSocial.customExceptions.ComunidadeCriadaException;
+import src.RedeSocial.customExceptions.ZeroAmigosException;
+import src.RedeSocial.customExceptions.ZeroComunidadesException;
 
 public class Interface {
     public static void main(String[] args) {
@@ -107,21 +110,33 @@ public class Interface {
                             System.out.println("\nEnvio de mensagem cancelado\n");
                     } catch (IndexOutOfBoundsException e) {
                         System.err.println("\nErro! Amigo não encontrado!\n");
+                    } catch (ZeroAmigosException e) {
+                        System.err.println("\n"+e.getMessage()+"\n");
                     }
                 }
                 else if (escolha == 6) {
                     titulo("Criar comunidade");
-                    if (iFace.novaComunidade(logado))
-                        System.out.println("\nComunidade criada\n");
-                    else 
-                        System.out.println("\nCriação de comunidade cancelada\n");
+                    try {
+                        if (iFace.novaComunidade(logado))
+                            System.out.println("\nComunidade criada\n");
+                        else 
+                            System.out.println("\nCriação de comunidade cancelada\n");
+                    } catch(ComunidadeCriadaException e) {
+                        System.err.println("\n"+e.getMessage()+"\n");
+                    }
                 }
                 else if (escolha == 7){
                     titulo("Entrar em uma comunidade");
-                    if (iFace.virarMembroComunidade(logado)) 
-                        System.out.println("\nVocê virou membro da comunidade!\n");
-                    else 
-                        System.out.println("\nOperação cancelada\n");
+                    try {
+                        if (iFace.virarMembroComunidade(logado)) 
+                            System.out.println("\nVocê virou membro da comunidade!\n");
+                        else 
+                            System.out.println("\nOperação cancelada\n");                        
+                    } catch (ZeroComunidadesException e) {
+                        System.err.println("\n"+e.getMessage()+"\n");
+                    } catch (IndexOutOfBoundsException e) {
+                        System.err.println("\nComunidade não encontrada\n");
+                    }
                 }
                 else if (escolha == 8) {
                     titulo("Feed de notícias");
