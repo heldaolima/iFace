@@ -297,11 +297,11 @@ public class IFace implements RedeSocial {
 
         }
 
-        System.out.println("Usuário "+logado.getSolicitacao(i));
         // Pode lançar o indexOutOfBounds
+        System.out.println("Usuário "+logado.getSolicitacao(i));
+        
         System.out.println("[1] Aceitar\n[2] Recusar\n[-1] Cancelar");
         System.out.print("Escolha: ");
-        
         int esc;
         while (true) {
             try {
@@ -316,17 +316,15 @@ public class IFace implements RedeSocial {
             }
         }
         
-        if (esc == -1) {
-            return false;
-        }
+        if (esc == -1) return false;
 
-        else if (esc == 2) {
+        else {
             logado.solicitacoes.remove(logado.getSolicitacao(i));
-            System.out.println("Solicitação recusada");
+            if (esc == 2)
+                System.out.println("Solicitação recusada");
+            else 
+                logado.respoderSolicitacao(logado.getSolicitacao(i), usuarios);   
         }
-        else 
-            logado.respoderSolicitacao(logado.getSolicitacao(i), usuarios);   
-        
         return true;
     }
 
@@ -357,14 +355,19 @@ public class IFace implements RedeSocial {
 
         Mensagem msg = new Mensagem();
         msg.setSender(logado.getLogin());
-        System.out.println("Insira a nova mensgem: ");
+        String conteudo;
         
-        String content = sc.nextLine();
-        while (content == null || content.equals("") || content.equals(" ")) {
-            System.out.println("Entrada inválida! Por favor, insira uma nova mensagem válida:");
-            msg.setContent(sc.nextLine());
+        while (true) {
+            try {
+                System.out.println("Insira a nova mensgem: ");
+                conteudo = ler();  
+                break;             
+            } catch(EntradaInvalidaException | EntradaVaziaException e) {
+                System.err.println(e.getMessage());
+            }
         }
 
+        msg.setContent(conteudo);
         logado.getAmigo(i).novaMensagem(msg); //o amigo tem a mensagem;
 
         return logado.enviarMensagem(logado.getAmigo(i), msg, usuarios); //para que o Usuario destinatário receba a mensagem
