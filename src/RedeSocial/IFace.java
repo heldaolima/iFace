@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import src.RedeSocial.abstratas.RedeSocial;
+import src.RedeSocial.customExceptions.LoginInvalidoException;
 import src.RedeSocial.customExceptions.NomeInvalidoException;
+import src.RedeSocial.customExceptions.SenhaInvalidaException;
 import src.usuario.Amigo;
 import src.usuario.Atributo;
 import src.usuario.Mensagem;
@@ -18,14 +20,38 @@ public class IFace implements RedeSocial {
     protected PseudoUser pseudoLogado = null;
     public Scanner sc = new Scanner(System.in);
 
+    public String lerSenha() throws SenhaInvalidaException {
+        String senha = sc.nextLine();
+        if (!entradaValida(senha))
+            throw new SenhaInvalidaException();
+        else if (allSpaces(senha))
+            throw new SenhaInvalidaException("A sua senha não pode ser só de espaços.");
+        else if (senha.length() < 6)
+            throw new SenhaInvalidaException("A sua senha deve ter pelo menos 6 caracteres.");
+        return senha;
+    }
+
+    public String lerLogin() throws LoginInvalidoException {
+        String login = sc.nextLine();
+        if (!entradaValida(login)) 
+            throw new LoginInvalidoException();
+        else if (loginUsado(login))
+            throw new LoginInvalidoException("Este login já está em uso.");    
+        else if (!loginValido(login))
+            throw new LoginInvalidoException("Seu login não pode conter espaços nem '@'.");       
+        else if (allNumbers(login))
+            throw new LoginInvalidoException("Seu login não pode ser composto apenas de números");
+        return login;
+    }
+
     public String lerNome() throws NomeInvalidoException {
         String nome = sc.nextLine();
         if (!entradaValida(nome)) 
-            throw new NomeInvalidoException("Entrada inválida! Por favor, insira o seu nome e sobrenome: ");
+            throw new NomeInvalidoException();
         else if (!nomeValido(nome))
-            throw new NomeInvalidoException("Nome inválido! O seu nome não pode conter números. Insira o seu nome e sobrenome: ");
+            throw new NomeInvalidoException("Nome inválido! O seu nome não pode conter números.");
         else if (allSpaces(nome))
-            throw new NomeInvalidoException("Seu nome não pode ser só de espaços! Insira seu nome e sobrenome: ");
+            throw new NomeInvalidoException("Seu nome não pode ser só de espaços.");
         return nome;
     }
 
@@ -33,37 +59,41 @@ public class IFace implements RedeSocial {
     public boolean novaConta(){
         String nome, login, senha;
         System.out.println("Caso queira cancelar, insira -1 no lugar do nome ou no lugar de login");
-        System.out.print("Insira o seu nome e sobrenome: ");
         
         while (true) {
             try {
+                System.out.print("Insira o seu nome e sobrenome: ");
                 nome = lerNome();
                 break;
             } catch (NomeInvalidoException e) {
-                System.out.println(e.getMessage());
+                System.err.println(e.getMessage());
+            }
+        }
+
+        if (nome.equals("-1")) return false;
+
+        while (true) {
+            try {
+                System.out.print("Crie um login: ");
+                login = lerLogin();
+                break;
+            } catch (LoginInvalidoException e) {
+                System.err.println(e.getMessage());
             }
         }
         
-            // System.out.print("Nome inválido! Insira o seu nome e sobrenome:");
-            // nome = sc.nextLine();
-        if (nome.equals("-1")) return false;
-
-        System.out.print("Crie um login: ");
-        login = sc.nextLine();
         
-        while (loginUsado(login) || !loginValido(login) || !entradaValida(login)) {
-            System.out.print("Login inválido! Crie um login: ");
-            login = sc.nextLine();
-        }
-
         if (login.equals("-1")) return false;
 
-        System.out.print("Crie uma senha: ");
-        senha = sc.nextLine();
 
-        while (senha == "" || senha == null || allSpaces(senha)) { // pode ser tudo numero
-            System.out.println("Senha inválida! Crie uma senha: ");
-            senha = sc.nextLine();
+        while (true) {
+            try {
+                System.out.print("Crie uma senha: ");
+                senha = lerSenha();
+                break;
+            } catch (SenhaInvalidaException e) {
+                System.err.println(e.getMessage());
+            }
         }
 
         usuarios.add(new Usuario(nome, login, senha));
@@ -526,10 +556,12 @@ public class IFace implements RedeSocial {
 
     // não pode ser tudo espaço nem ter números
     public boolean nomeValido(String entrada) {
-        char[] chars = entrada.toCharArray();
-        for (char c: chars) {
-            if (Character.isDigit(c))
-                return false;
+        if (!entrada.equals("-1")) { //-1 é a etnrada geral de cancelamento de operação
+            char[] chars = entrada.toCharArray();
+            for (char c: chars) {
+                if (Character.isDigit(c))
+                    return false;
+            }
         }
         return true;
     }
