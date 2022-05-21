@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import src.RedeSocial.abstratas.RedeSocial;
+import src.RedeSocial.customExceptions.NomeInvalidoException;
 import src.usuario.Amigo;
 import src.usuario.Atributo;
 import src.usuario.Mensagem;
@@ -17,17 +18,34 @@ public class IFace implements RedeSocial {
     protected PseudoUser pseudoLogado = null;
     public Scanner sc = new Scanner(System.in);
 
+    public String lerNome() throws NomeInvalidoException {
+        String nome = sc.nextLine();
+        if (!entradaValida(nome)) 
+            throw new NomeInvalidoException("Entrada inválida! Por favor, insira o seu nome e sobrenome: ");
+        else if (!nomeValido(nome))
+            throw new NomeInvalidoException("Nome inválido! O seu nome não pode conter números. Insira o seu nome e sobrenome: ");
+        else if (allSpaces(nome))
+            throw new NomeInvalidoException("Seu nome não pode ser só de espaços! Insira seu nome e sobrenome: ");
+        return nome;
+    }
+
     @Override
     public boolean novaConta(){
         String nome, login, senha;
         System.out.println("Caso queira cancelar, insira -1 no lugar do nome ou no lugar de login");
         System.out.print("Insira o seu nome e sobrenome: ");
-        nome = sc.nextLine();
         
-        while (nome == "" || nome == null || nome.equals(" ") || !nomeValido(nome)) {
-            System.out.print("Nome inválido! Insira o seu nome e sobrenome:");
-            nome = sc.nextLine();
+        while (true) {
+            try {
+                nome = lerNome();
+                break;
+            } catch (NomeInvalidoException e) {
+                System.out.println(e.getMessage());
+            }
         }
+        
+            // System.out.print("Nome inválido! Insira o seu nome e sobrenome:");
+            // nome = sc.nextLine();
         if (nome.equals("-1")) return false;
 
         System.out.print("Crie um login: ");
@@ -513,23 +531,11 @@ public class IFace implements RedeSocial {
             if (Character.isDigit(c))
                 return false;
         }
-
-        return entradaValida(entrada);
+        return true;
     }
 
     public boolean entradaValida(String entrada) {
         if (entrada.equals("") || entrada == null)
-            return false;
-
-        char[] chars = entrada.toCharArray();
-        int contSpaces = 0, contNumbers = 0;
-        for (char c: chars) {
-            if (Character.isSpaceChar(c)) 
-                contSpaces++;
-            else if (Character.isDigit(c))
-                contNumbers++;
-        }
-        if (contSpaces == entrada.length() || contNumbers == entrada.length()) 
             return false;
         return true;
     }
@@ -544,4 +550,17 @@ public class IFace implements RedeSocial {
         return contSpaces == entrada.length();
     }
 
+    public boolean allNumbers(String entrada) {
+        char[] chars = entrada.toCharArray();
+        int contDigits = 0;
+        for (char c: chars) {
+            if (Character.isDigit(c)) 
+                contDigits++;
+        }
+        return contDigits == entrada.length();
+    }
+
 }
+
+// Custom exceptions here
+
