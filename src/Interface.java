@@ -3,9 +3,11 @@ import java.util.Scanner;
 
 import src.RedeSocial.IFace;
 import src.RedeSocial.Logado;
-import src.RedeSocial.customExceptions.ComunidadeCriadaException;
-import src.RedeSocial.customExceptions.ZeroAmigosException;
-import src.RedeSocial.customExceptions.ZeroComunidadesException;
+import src.RedeSocial.customExceptions.ComunityCreatedException;
+import src.RedeSocial.customExceptions.NoFriendsException;
+import src.RedeSocial.customExceptions.NoRequestsException;
+import src.RedeSocial.customExceptions.WrongPasswordException;
+import src.RedeSocial.customExceptions.NoComunitiesException;
 
 public class Interface {
     public static void main(String[] args) {
@@ -99,6 +101,8 @@ public class Interface {
                             System.out.println("\nResposta cancelada\n");
                     } catch (IndexOutOfBoundsException e) {
                         System.err.println("\nErro! Usuário não encontrado!\n");
+                    } catch (NoRequestsException e) {
+                        System.err.println("\n"+e.getMessage()+"\n");
                     }
                 }
                 else if (escolha == 5) {
@@ -110,7 +114,7 @@ public class Interface {
                             System.out.println("\nEnvio de mensagem cancelado\n");
                     } catch (IndexOutOfBoundsException e) {
                         System.err.println("\nErro! Amigo não encontrado!\n");
-                    } catch (ZeroAmigosException e) {
+                    } catch (NoFriendsException e) {
                         System.err.println("\n"+e.getMessage()+"\n");
                     }
                 }
@@ -121,7 +125,7 @@ public class Interface {
                             System.out.println("\nComunidade criada\n");
                         else 
                             System.out.println("\nCriação de comunidade cancelada\n");
-                    } catch(ComunidadeCriadaException e) {
+                    } catch(ComunityCreatedException e) {
                         System.err.println("\n"+e.getMessage()+"\n");
                     }
                 }
@@ -132,7 +136,7 @@ public class Interface {
                             System.out.println("\nVocê virou membro da comunidade!\n");
                         else 
                             System.out.println("\nOperação cancelada\n");                        
-                    } catch (ZeroComunidadesException e) {
+                    } catch (NoComunitiesException e) {
                         System.err.println("\n"+e.getMessage()+"\n");
                     } catch (IndexOutOfBoundsException e) {
                         System.err.println("\nComunidade não encontrada\n");
@@ -161,12 +165,16 @@ public class Interface {
                 }
                 else if (escolha == 12) {
                     titulo("Exclusão da conta");
-                    if (iFace.excluirConta(logado)) {
-                        System.out.println("\nConta excluída\n");
-                        logado = null;
+                    try {
+                        if (iFace.excluirConta(logado)) {
+                            System.out.println("\nConta excluída\n");
+                            logado = null;
+                        }
+                        else
+                            System.out.println("\nExclusão de conta cancelada\n");
+                    } catch (WrongPasswordException e) {
+                        System.err.println("\n"+e.getMessage()+"\n");
                     }
-                    else
-                        System.out.println("\nExclusão de conta cancelada\n");
                 }
             }
         }

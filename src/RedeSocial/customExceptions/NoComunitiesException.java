@@ -1,7 +1,7 @@
 package src.RedeSocial.customExceptions;
 
-public class ZeroComunidadesException extends Exception{
-    public ZeroComunidadesException() {
+public class NoComunitiesException extends Exception{
+    public NoComunitiesException() {
         super("Não há comunidades disponíveis.");
     }
 }

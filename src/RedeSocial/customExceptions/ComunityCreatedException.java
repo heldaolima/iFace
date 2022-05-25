@@ -1,7 +1,7 @@
 package src.RedeSocial.customExceptions;
 
-public class ComunidadeCriadaException extends Exception{
-    public ComunidadeCriadaException() {
+public class ComunityCreatedException extends Exception{
+    public ComunityCreatedException() {
         super("A sua conta já tem uma comunidade criada");
     }
 }

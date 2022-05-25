@@ -18,47 +18,47 @@ public class IFace implements RedeSocial {
     protected PseudoUser pseudoLogado = null;
     public Scanner sc = new Scanner(System.in);
 
-    public String lerDescricao() throws EntradaVaziaException, EntradaInvalidaException {
-        String descricao = sc.nextLine();
-        if (!entradaValida(descricao))
-            throw new EntradaVaziaException();
-        else if (allSpaces(descricao))
-            throw new EntradaInvalidaException("A descrição não pode ser só de espaços.");
-        return descricao;
-    }
-
-    public String lerSenha() throws SenhaInvalidaException, EntradaVaziaException {
+    public String lerSenha() throws InvalidPasswordException, EmptyInputException {
         String senha = sc.nextLine();
         if (!entradaValida(senha))
-            throw new EntradaVaziaException();
+            throw new EmptyInputException();
         else if (allSpaces(senha))
-            throw new SenhaInvalidaException("A sua senha não pode ser só de espaços.");
+            throw new InvalidPasswordException("A sua senha não pode ser só de espaços.");
         else if (senha.length() < 6)
-            throw new SenhaInvalidaException("A sua senha deve ter pelo menos 6 caracteres.");
+            throw new InvalidPasswordException("A sua senha deve ter pelo menos 6 caracteres.");
         return senha;
     }
 
-    public String lerLogin() throws LoginInvalidoException, EntradaVaziaException {
+    public String lerLogin() throws InvalidLoginException, EmptyInputException {
         String login = sc.nextLine();
         if (!entradaValida(login)) 
-            throw new EntradaVaziaException();
+            throw new EmptyInputException();
         else if (loginUsado(login))
-            throw new LoginInvalidoException("Este login já está em uso.");    
+            throw new InvalidLoginException("Este login já está em uso.");    
         else if (!loginValido(login))
-            throw new LoginInvalidoException("Seu login não pode conter espaços nem '@'.");       
+            throw new InvalidLoginException("Seu login não pode conter espaços nem '@'.");       
         else if (allNumbers(login))
-            throw new LoginInvalidoException("Seu login não pode ser composto apenas de números");
+            throw new InvalidLoginException("Seu login não pode ser composto apenas de números");
         return login;
     }
 
-    public String ler() throws EntradaInvalidaException, EntradaVaziaException {
+    public String lerTexto() throws InvalidInputException, EmptyInputException {
+        String texto = sc.nextLine();
+        if (!entradaValida(texto))
+            throw new EmptyInputException();
+        else if (allSpaces(texto))
+            throw new InvalidInputException("A entrada não pode ser só de espaços.");
+        return texto;
+    }
+
+    public String lerNome() throws InvalidInputException, EmptyInputException {
         String nome = sc.nextLine();
         if (!entradaValida(nome)) 
-            throw new EntradaVaziaException();
+            throw new EmptyInputException();
         else if (!nomeValido(nome))
-            throw new EntradaInvalidaException("A entrada não pode conter números.");
+            throw new InvalidInputException("A entrada não pode conter números.");
         else if (allSpaces(nome))
-            throw new EntradaInvalidaException("A entrada pode ser só de espaços.");
+            throw new InvalidInputException("A entrada pode ser só de espaços.");
         return nome;
     }
 
@@ -70,9 +70,9 @@ public class IFace implements RedeSocial {
         while (true) {
             try {
                 System.out.print("Insira o seu nome e sobrenome: ");
-                nome = ler();
+                nome = lerNome();
                 break;
-            } catch (EntradaInvalidaException | EntradaVaziaException e) {
+            } catch (InvalidInputException | EmptyInputException e) {
                 System.err.println(e.getMessage());
             }
         }
@@ -84,7 +84,7 @@ public class IFace implements RedeSocial {
                 System.out.print("Crie um login: ");
                 login = lerLogin();
                 break;
-            } catch (LoginInvalidoException | EntradaVaziaException e) {
+            } catch (InvalidLoginException | EmptyInputException e) {
                 System.err.println(e.getMessage());
             }
         }
@@ -98,7 +98,7 @@ public class IFace implements RedeSocial {
                 System.out.print("Crie uma senha: ");
                 senha = lerSenha();
                 break;
-            } catch (SenhaInvalidaException | EntradaVaziaException e) {
+            } catch (InvalidPasswordException | EmptyInputException e) {
                 System.err.println(e.getMessage());
             }
         }
@@ -134,9 +134,9 @@ public class IFace implements RedeSocial {
         while (true) {
             try {
                 System.out.print("Nome do atributo: ");
-                nome = ler();
+                nome = lerTexto();
                 break;
-            } catch (EntradaInvalidaException | EntradaVaziaException e) {
+            } catch (InvalidInputException | EmptyInputException e) {
                 System.err.println(e.getMessage());
             }
         }
@@ -149,9 +149,9 @@ public class IFace implements RedeSocial {
         while (true) {
             try {
                 System.out.print("Descrição do atributo: ");
-                desc = lerDescricao();
+                desc = lerTexto();
                 break;
-            } catch (EntradaInvalidaException | EntradaVaziaException e) {
+            } catch (InvalidInputException | EmptyInputException e) {
                 
             }
         }
@@ -215,9 +215,9 @@ public class IFace implements RedeSocial {
                 while (true) {
                     try {
                         System.out.print("\nInsira o novo nome: ");
-                        novo = ler();
+                        novo = lerNome();
                         break;
-                    } catch (EntradaInvalidaException | EntradaVaziaException e) {
+                    } catch (InvalidInputException | EmptyInputException e) {
                         System.err.println(e.getMessage());
                     }
                 }
@@ -229,9 +229,9 @@ public class IFace implements RedeSocial {
                 System.out.print("\nInsira a nova descrição: ");
                 while (true) {
                     try {
-                        novo = lerDescricao();
+                        novo = lerTexto();
                         break;
-                    } catch (EntradaInvalidaException | EntradaVaziaException e) {
+                    } catch (InvalidInputException | EmptyInputException e) {
                         System.err.println(e.getMessage());
                     }
                 }
@@ -272,12 +272,11 @@ public class IFace implements RedeSocial {
     }
 
     @Override
-    public boolean responderSolicitacao(Logado logado) throws IndexOutOfBoundsException {
+    public boolean responderSolicitacao(Logado logado) 
+            throws IndexOutOfBoundsException, NoRequestsException {
         
-        if (logado.qtdSolicitacoes() == 0) {
-            System.out.println("Não há solicitações");
-            return false;
-        }
+        if (logado.qtdSolicitacoes() == 0)
+            throw new NoRequestsException();
 
         logado.mostrarSolicitacoes();
         System.out.print("Responder solicitção de [índice]: ");
@@ -327,10 +326,10 @@ public class IFace implements RedeSocial {
 
     @Override
     public boolean enviarMensagem(Logado logado) 
-            throws IndexOutOfBoundsException, ZeroAmigosException{
+            throws IndexOutOfBoundsException, NoFriendsException{
         
         if (logado.qtdAmigos() == 0) 
-            throw new ZeroAmigosException();
+            throw new NoFriendsException();
 
         System.out.println("Você tem "+logado.qtdAmigos()+" amigos");
         logado.mostrarAmigos();
@@ -357,9 +356,9 @@ public class IFace implements RedeSocial {
         while (true) {
             try {
                 System.out.println("Insira a nova mensgem: ");
-                conteudo = ler();  
+                conteudo = lerNome();  
                 break;             
-            } catch(EntradaInvalidaException | EntradaVaziaException e) {
+            } catch(InvalidInputException | EmptyInputException e) {
                 System.err.println(e.getMessage());
             }
         }
@@ -371,18 +370,18 @@ public class IFace implements RedeSocial {
     }
 
     @Override
-    public boolean novaComunidade(Logado logado) throws ComunidadeCriadaException{
+    public boolean novaComunidade(Logado logado) throws ComunityCreatedException{
         if (logado.temComunidade())
-            throw new ComunidadeCriadaException();
+            throw new ComunityCreatedException();
 
         System.out.println("Insira -1 no lugar do nome ou da descrição para cancelar");
         String nome;
         while (true) {
             try {
                 System.out.print("Insira o nome da comunidade: ");
-                nome = ler();
+                nome = lerNome();
                 break;
-            } catch (EntradaInvalidaException | EntradaVaziaException e) {
+            } catch (InvalidInputException | EmptyInputException e) {
                 System.err.println(e.getMessage());
             }
 
@@ -395,10 +394,10 @@ public class IFace implements RedeSocial {
         while (true) {
             try {
                 System.out.print("Insira a descrição da comunidade: ");
-                descricao = lerDescricao();
+                descricao = lerTexto();
                 break;
                 
-            } catch (EntradaInvalidaException | EntradaVaziaException e) {
+            } catch (InvalidInputException | EmptyInputException e) {
                 System.err.println(e.getMessage());
             }
         }
@@ -413,11 +412,11 @@ public class IFace implements RedeSocial {
 
     @Override
     public boolean virarMembroComunidade(Logado logado) 
-                throws ZeroComunidadesException, IndexOutOfBoundsException{
+                throws NoComunitiesException, IndexOutOfBoundsException{
         
         ArrayList<Integer> disponiveis = mostrarComunidades(logado);
         if (disponiveis.size() == 0) 
-            throw new ZeroComunidadesException();
+            throw new NoComunitiesException();
 
         System.out.println("Entrar na comunidade (indice): ");
         int esc;
@@ -430,6 +429,7 @@ public class IFace implements RedeSocial {
             }
         }
         
+        System.out.println("Comunidade escolhida: "+comunidades.get(esc).getNome());
         comunidades.get(esc).addMembro(pseudoLogado);
         
         logado.virarMembro(comunidades.get(esc));
@@ -447,10 +447,13 @@ public class IFace implements RedeSocial {
         String conteudo;
         System.out.println("No que você está pensando? (-1) cancela");
         
-        conteudo = sc.nextLine();
-        while (conteudo == null || conteudo == "") {
-            System.out.println("No que você está pensando? (-1) cancela");
-            conteudo = sc.nextLine();
+        while(true) {
+            try {
+                conteudo = lerTexto();
+                break;
+            } catch (EmptyInputException | InvalidInputException e) {
+                System.err.println(e.getMessage());
+            }
         }
         
         if (conteudo.equals("-1")) 
@@ -459,13 +462,19 @@ public class IFace implements RedeSocial {
 
         System.out.println("Defina a privacidade da publicação:\n[1] Pública\n[2] Privada\n[-1] Cancelar publicação");
         System.out.print("Sua escolha: ");
-        int esc = sc.nextInt();
-        sc.nextLine();
-
-        while (esc != -1 && (esc < 1 || esc > 2)) {
-            System.out.print("Entrada inválida! Insira a sua escolha de privacidade: ");
-            esc = sc.nextInt();
-            sc.nextLine();
+        
+        int esc;
+        while (true) {
+            try {
+                esc = Integer.parseInt(sc.nextLine());
+                while (esc != 1 && esc != 2 && esc != -1) {
+                    System.out.print("Insira uma opção disponível. Sua escolha: ");
+                    esc = Integer.parseInt(sc.nextLine());
+                }
+                break;
+            } catch (NumberFormatException e) {
+                System.err.print("Entrada inválida. Insira um número disponível: ");
+            }
         }
 
         if (esc == -1) 
@@ -491,12 +500,10 @@ public class IFace implements RedeSocial {
     }
 
     @Override
-    public boolean excluirConta(Logado logado) {
+    public boolean excluirConta(Logado logado) throws WrongPasswordException{
         System.out.println("Para confirmar a operação, insira a sua senha novamente: ");
-        if (!logado.getSenha().equals(sc.nextLine())) {
-            System.out.println("A senha insira não é a da sua conta");
-            return false;
-        }
+        if (!logado.getSenha().equals(sc.nextLine())) 
+            throw new WrongPasswordException();
         System.out.println("Excluindo sua conta...");
 
         if (logado.temComunidade())
@@ -535,7 +542,7 @@ public class IFace implements RedeSocial {
     }
 
     public boolean loginValido(String login) {
-        if (login.contains(" ") || login.contains("@"))
+        if (login.contains(" ") || login.contains("@") || login.contains("#"))
             return false;
         return true;
     }
