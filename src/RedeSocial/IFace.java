@@ -18,50 +18,6 @@ public class IFace implements RedeSocial {
     protected PseudoUser pseudoLogado = null;
     public Scanner sc = new Scanner(System.in);
 
-    public String lerSenha() throws InvalidPasswordException, EmptyInputException {
-        String senha = sc.nextLine();
-        if (!entradaValida(senha))
-            throw new EmptyInputException();
-        else if (allSpaces(senha))
-            throw new InvalidPasswordException("A sua senha não pode ser só de espaços.");
-        else if (senha.length() < 6)
-            throw new InvalidPasswordException("A sua senha deve ter pelo menos 6 caracteres.");
-        return senha;
-    }
-
-    public String lerLogin() throws InvalidLoginException, EmptyInputException {
-        String login = sc.nextLine();
-        if (!entradaValida(login)) 
-            throw new EmptyInputException();
-        else if (loginUsado(login))
-            throw new InvalidLoginException("Este login já está em uso.");    
-        else if (!loginValido(login))
-            throw new InvalidLoginException("Seu login não pode conter espaços nem '@'.");       
-        else if (allNumbers(login))
-            throw new InvalidLoginException("Seu login não pode ser composto apenas de números");
-        return login;
-    }
-
-    public String lerTexto() throws InvalidInputException, EmptyInputException {
-        String texto = sc.nextLine();
-        if (!entradaValida(texto))
-            throw new EmptyInputException();
-        else if (allSpaces(texto))
-            throw new InvalidInputException("A entrada não pode ser só de espaços.");
-        return texto;
-    }
-
-    public String lerNome() throws InvalidInputException, EmptyInputException {
-        String nome = sc.nextLine();
-        if (!entradaValida(nome)) 
-            throw new EmptyInputException();
-        else if (!nomeValido(nome))
-            throw new InvalidInputException("A entrada não pode conter números.");
-        else if (allSpaces(nome))
-            throw new InvalidInputException("A entrada pode ser só de espaços.");
-        return nome;
-    }
-
     @Override
     public boolean novaConta(){
         String nome, login, senha;
@@ -628,7 +584,51 @@ public class IFace implements RedeSocial {
         return contDigits == entrada.length();
     }
 
+    // Custom exceptions here
+
+    public String lerSenha() throws InvalidPasswordException, EmptyInputException {
+        String senha = sc.nextLine();
+        if (!entradaValida(senha))
+            throw new EmptyInputException();
+        else if (allSpaces(senha))
+            throw new InvalidPasswordException("A sua senha não pode ser só de espaços.");
+        else if (senha.length() < 6)
+            throw new InvalidPasswordException("A sua senha deve ter pelo menos 6 caracteres.");
+        return senha;
+    }
+
+    public String lerLogin() throws InvalidLoginException, EmptyInputException {
+        String login = sc.nextLine();
+        if (!entradaValida(login)) 
+            throw new EmptyInputException();
+        else if (loginUsado(login))
+            throw new InvalidLoginException("Este login já está em uso.");    
+        else if (!loginValido(login))
+            throw new InvalidLoginException("Seu login não pode conter espaços nem '@'.");       
+        else if (allNumbers(login))
+            throw new InvalidLoginException("Seu login não pode ser composto apenas de números");
+        return login;
+    }
+
+    public String lerTexto() throws InvalidInputException, EmptyInputException {
+        String texto = sc.nextLine();
+        if (!entradaValida(texto))
+            throw new EmptyInputException();
+        else if (allSpaces(texto))
+            throw new InvalidInputException("A entrada não pode ser só de espaços.");
+        return texto;
+    }
+
+    public String lerNome() throws InvalidInputException, EmptyInputException {
+        String nome = sc.nextLine();
+        if (!entradaValida(nome)) 
+            throw new EmptyInputException();
+        else if (!nomeValido(nome))
+            throw new InvalidInputException("A entrada não pode conter números.");
+        else if (allSpaces(nome))
+            throw new InvalidInputException("A entrada pode ser só de espaços.");
+        return nome;
+    }
 }
 
-// Custom exceptions here
 
