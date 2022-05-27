@@ -1,10 +1,7 @@
 package src.RedeSocial;
 
-import java.lang.invoke.WrongMethodTypeException;
 import java.util.ArrayList;
 import java.util.Scanner;
-
-import org.w3c.dom.ls.LSException;
 
 import src.RedeSocial.abstratas.RedeSocial;
 import src.RedeSocial.customExceptions.*;
@@ -67,13 +64,11 @@ public class IFace implements RedeSocial {
     }
 
     @Override
-    public Logado login() throws WrongPasswordException{
+    public Logado login() throws WrongPasswordException, UserNotFoundException{
         System.out.print("Insira o seu login: ");        
         Usuario user = getUsuario(sc.nextLine());
-        if (user == null) {
-            System.out.println("Usuário não encontrado.");
-            return null;
-        }
+        if (user == null) 
+            throw new UserNotFoundException();
         System.out.print("Insira a sua senha: ");
         if (user.getSenha().equals(sc.nextLine())) {
             usuarios.remove(user); //temporariamente removido
@@ -203,7 +198,8 @@ public class IFace implements RedeSocial {
     }
 
     @Override
-    public boolean enviarSolicitacao(Logado logado) throws IndexOutOfBoundsException{
+    public boolean enviarSolicitacao(Logado logado) 
+            throws IndexOutOfBoundsException, NoAvaliableUsersException{
         ArrayList<Integer> disponiveis = mostrarUsuariosSolicitacao(logado);
         
         if (disponiveis.size() == 0) {
@@ -226,6 +222,9 @@ public class IFace implements RedeSocial {
         
         Solicitacao sol = new Solicitacao(logado.getNome(), logado.getLogin(), logado.qtdAmigos());
         
+        if (!disponiveis.contains(i))
+            throw new IndexOutOfBoundsException();
+
         usuarios.get(i).recebeSolicitacao(sol);
 
         return true;        
@@ -253,7 +252,7 @@ public class IFace implements RedeSocial {
 
         }
 
-        // Pode lançar o indexOutOfBounds
+        // IndexOutOfBoundsException
         System.out.println("Usuário "+logado.getSolicitacao(i));
         
         System.out.println("[1] Aceitar\n[2] Recusar\n[-1] Cancelar");
@@ -307,7 +306,8 @@ public class IFace implements RedeSocial {
 
         }
        
-       logado.getAmigo(i).mostrarMensagens(); //pode lançar o indexOutOfBounds
+        //IndexOutOfBoundsException
+       logado.getAmigo(i).mostrarMensagens();
 
         Mensagem msg = new Mensagem();
         msg.setSender(logado.getLogin());
@@ -315,8 +315,8 @@ public class IFace implements RedeSocial {
         
         while (true) {
             try {
-                System.out.println("Insira a nova mensgem: ");
-                conteudo = lerNome();  
+                System.out.println("Insira a nova mensagem: ");
+                conteudo = lerTexto();  
                 break;             
             } catch(InvalidInputException | EmptyInputException e) {
                 System.err.println(e.getMessage());
@@ -388,6 +388,9 @@ public class IFace implements RedeSocial {
                 System.err.print("Entrada inválida. Insira um número: ");
             }
         }
+        
+        if (!disponiveis.contains(esc))
+            throw new IndexOutOfBoundsException();
         
         System.out.println("Comunidade escolhida: "+comunidades.get(esc).getNome());
         comunidades.get(esc).addMembro(pseudoLogado);
@@ -552,10 +555,11 @@ public class IFace implements RedeSocial {
 
     // não pode ser tudo espaço nem ter números
     public boolean nomeValido(String entrada) {
-        if (!entrada.equals("-1")) { //-1 é a etnrada geral de cancelamento de operação
+        String symbols = "!@#$%&*()'+,-./:;<=>?[]^_`{|}";
+        if (!entrada.equals("-1")) {
             char[] chars = entrada.toCharArray();
             for (char c: chars) {
-                if (Character.isDigit(c))
+                if (Character.isDigit(c) || symbols.contains(Character.toString(c)))
                     return false;
             }
         }
@@ -630,7 +634,7 @@ public class IFace implements RedeSocial {
         if (!entradaValida(nome)) 
             throw new EmptyInputException();
         else if (!nomeValido(nome))
-            throw new InvalidInputException("A entrada não pode conter números.");
+            throw new InvalidInputException("A entrada não pode conter números nem símbolos.");
         else if (allSpaces(nome))
             throw new InvalidInputException("A entrada pode ser só de espaços.");
         return nome;

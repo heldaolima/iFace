@@ -4,8 +4,10 @@ import java.util.Scanner;
 import src.RedeSocial.IFace;
 import src.RedeSocial.Logado;
 import src.RedeSocial.customExceptions.ComunityCreatedException;
+import src.RedeSocial.customExceptions.NoAvaliableUsersException;
 import src.RedeSocial.customExceptions.NoFriendsException;
 import src.RedeSocial.customExceptions.NoRequestsException;
+import src.RedeSocial.customExceptions.UserNotFoundException;
 import src.RedeSocial.customExceptions.WrongPasswordException;
 import src.RedeSocial.customExceptions.NoComunitiesException;
 
@@ -45,7 +47,7 @@ public class Interface {
                             System.out.println("\nLogin ou senha inválidos\n");
                         else 
                             System.out.println("\nLogado com sucesso! Bem vind@, "+ logado.getNome());
-                    } catch (WrongPasswordException e) {
+                    } catch (WrongPasswordException | UserNotFoundException e) {
                         System.out.println("\n"+e.getMessage()+"\n");
                     }
                 }
@@ -56,9 +58,9 @@ public class Interface {
                 try {
                     escolha = Integer.parseInt(sc.nextLine());
                     if (escolha < 1 || escolha > 12) 
-                        System.out.println("\nEntrada inválida. Por favor, insira um número disponível no menu!\n");
+                        System.out.println("\nEntrada inválida. Por favor, insira um número disponível no menu,\n");
                 } catch (NumberFormatException e) {
-                    System.err.println("\nEntrada inválida. Por favor, insira um número!\n");
+                    System.err.println("\nEntrada inválida. Por favor, insira um número.\n");
                 } 
 
 
@@ -93,6 +95,8 @@ public class Interface {
                             System.out.println("\nEnvio de solicitação cancelado\n");
                     } catch (IndexOutOfBoundsException e) {
                         System.err.println("\nErro! Usuário não encontrado!");
+                    } catch (NoAvaliableUsersException e) {
+                        System.err.println("\n"+e.getMessage()+"\n");
                     }
                 }
 

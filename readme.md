@@ -55,3 +55,33 @@ Em `src/usuario` ficam as classes relacionadas principalmente ao Usuário, que s
 - `usuario/Amigo.java` Subclasse de `PseudoUser`. Representa os amigos de um usuário. Dentro dele ficam as mensagens;
 - `usuario/Mensagem.java` As mensagens da rede social, com autor e conteúdo.
 - `usuario/Solicitacao/java` Sublcasse de `PseudoUser`, representa uma solicitação de amizade do iFace. Mostra a quantidade de amigos do solicitante.
+
+# Exceções
+Tratamento de Exceções no projeto: 
+- **Geral**: Ao longo de toda a implementação, os menus foram tratados para que não seja possível inserir entradas diferentes de números e das opções disponíveis através da `NumberFormatException`. Nesses casos, o programa entra em loop até que uma entrada válida seja inserida. Além disso, entradas vazias ou constituídas apenas de espaços lançam exceções, sem interromper a execução do programa. Todas as exceções são tratadas com mensagens amigáveis ao usuário, sem indicações da linha onde o erro ocorreu nem nada do tipo.
+
+- **Criação de conta**:
+	- **Nome**: Caso o nome contenha números ou símbolos, a exceção `InvalidNameException` será lançada.
+	- **Login**: Caso o login contenha espaços ou @, ou seja constituído exclusivamente de números, a exceção `InvalidLoginException` será lançada.
+	- **Senha**: Caso a senha tenha menos de seis caracteres ou espaços, a exceção `InvalidPassowordException` será lançada.
+	Em todos esses casos a função continua a ser executada até que uma entrada válida ou a entrada de cancelamento ("-1") seja inserida.
+
+- **Login na conta**: Caso o usuário queira entrar com um login inexistente, a exceção `UserNotFoundException` é lançada. Caso insira um login existente mas insira uma senha que não corresponde, a exceção `WrongPassowordException` é lançada. Nesses casos a função é encerrada e o usuário não consegue completar o login.
+
+- **Criação e edição de atributos**: Nomes de atributos não podem conter números, descrições não podem ser vazias. Na edição, caso o usuário insira um índice indisponível, a exceção `IndexOutOfBoundsException` é lançada e a edição é cancelada.
+
+- **Envio de solicitação de amizades**: Caso não haja usuários disponíveis, a exceção `NoAvaliableUsersException` é lançada. Se, ao ver a lista de usuários, o usuário insere um índice indisponível, a exceção `IndexOutOfBoundsException` é lançada e o envio é cancelado.
+
+- **Resposta de solicitação de amizades**: Caso não haja solicitações, a exceção `NoRequestsException` é lançada. Se, ao ver a lista de solicitações, o usuário insere um índice indisponível, a exceção `IndexOutOfBoundsException` é lançada e a resposta é cancelada.
+
+- **Envio de mensagens**: Caso o usuário não tenha amigos, a exceção `NoFriendsException` é lançada. Se, ao ver a lista de amigos, o usuário insere um índice indisponível, a exceção `IndexOutOfBoundsException` é lançada e o envio é cancelado. Caso a mensagem seja uma string vazia ou só de espaços, a exceção `EmptyInputException` é lançada.
+
+- **Criação de comunidade**: Convencionou-se que um usuário só pode criar uma comunidade. Assim, caso já tenha criado uma, se o usuário tentar criar outra a exceção `ComunityCreatedException` será lançada. Nomes e descrições são tratadas conforme explicitado acima.
+
+- **Entrada em comunidade**: Caso não haja comunidades disponíveis, a exceção `NoComunitiesException` é lançada. Se, ao ver a lista de comunidades, o usuário insere um índice indisponível, a exceção `IndexOutOfBoundsException` é lançada e a operação é cancelada.
+
+- **Publicação no feed**: O usuário não pode publicar textos vazios.
+
+- **Visualização do feed e resumo da conta**: Ambas funções de leitura apenas, não há o que tratar aqui. O controle já é feito pelo programa.
+
+- **Exclusão da conta**: Para confirmar a exclusão da conta, o usuário deve reinserir a sua senha. Caso insira uma senha inválida, a exceção `WrongPassowordException` é lançada e a operação é cancelada.
