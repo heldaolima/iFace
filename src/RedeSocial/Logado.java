@@ -45,14 +45,19 @@ public class Logado extends Usuario {
     }
 
     public void verFeed(ArrayList<Publicacao> posts) {
+        int cont = 0;
         for (Publicacao post: posts) {
             if (!post.getPrivado() || post.getAutor().getLogin().equals(this.getLogin())){
                 System.out.println(post.toString());
+                cont++;
             }
             else if (this.verificarAmizade(post.getAutor().getLogin()) != -1) {
                 System.out.println(post.toString());
+                cont++;
             }
         }
+        if (cont == 0)
+            System.out.println("Não há publicações...");
     }
 
 }
