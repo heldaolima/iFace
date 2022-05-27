@@ -45,7 +45,7 @@ public class Interface {
                         logado = iFace.login();
                         if (logado == null)
                             System.out.println("\nLogin ou senha inválidos\n");
-                        else 
+                        else
                             System.out.println("\nLogado com sucesso! Bem vind@, "+ logado.getNome());
                     } catch (WrongPasswordException | UserNotFoundException e) {
                         System.out.println("\n"+e.getMessage()+"\n");
@@ -53,6 +53,7 @@ public class Interface {
                 }
             }
             else {
+                escolha = 0;
                 System.out.println("[1] Adicionar atributo\n[2] Editar atributo\n[3] Enviar solicitação de amizade\n[4] Responder solicitação de amizade\n[5] Enviar mensagem\n[6] Criar comunidade\n[7] Entrar em comunidade\n[8] Visualizar feed de notícias\n[9] Publicar no feed de notícias\n[10] Resumo da conta\n[11] Sair\n[12] Excluir conta");
                 System.out.print("Escolha: ");
                 try {
@@ -74,7 +75,6 @@ public class Interface {
 
                 else if (escolha == 2) {
                     titulo("Edição de atributo");
-                    
                     try {
                         if (iFace.editarAtributo(logado)) {
                             System.out.println("\nEdição concluída\n");
