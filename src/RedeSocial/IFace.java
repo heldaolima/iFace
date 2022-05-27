@@ -1,7 +1,10 @@
 package src.RedeSocial;
 
+import java.lang.invoke.WrongMethodTypeException;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import org.w3c.dom.ls.LSException;
 
 import src.RedeSocial.abstratas.RedeSocial;
 import src.RedeSocial.customExceptions.*;
@@ -64,7 +67,7 @@ public class IFace implements RedeSocial {
     }
 
     @Override
-    public Logado login() {
+    public Logado login() throws WrongPasswordException{
         System.out.print("Insira o seu login: ");        
         Usuario user = getUsuario(sc.nextLine());
         if (user == null) {
@@ -72,12 +75,13 @@ public class IFace implements RedeSocial {
             return null;
         }
         System.out.print("Insira a sua senha: ");
-        if (user != null && user.getSenha().equals(sc.nextLine())) {
+        if (user.getSenha().equals(sc.nextLine())) {
             usuarios.remove(user); //temporariamente removido
             pseudoLogado = new PseudoUser(user.getNome(), user.getLogin());
             return (new Logado(user.getNome(), user.getLogin(), user.getSenha(), user.amigos, user.solicitacoes, user.comunidade, user.comunidadesMembro, user.atributos));
         }
-        return null;
+        else
+            throw new WrongPasswordException();
     }
 
     @Override
@@ -591,9 +595,11 @@ public class IFace implements RedeSocial {
         if (!entradaValida(senha))
             throw new EmptyInputException();
         else if (allSpaces(senha))
-            throw new InvalidPasswordException("A sua senha não pode ser só de espaços.");
+            throw new InvalidPasswordException("A senha não pode ser só de espaços.");
         else if (senha.length() < 6)
-            throw new InvalidPasswordException("A sua senha deve ter pelo menos 6 caracteres.");
+            throw new InvalidPasswordException("A senha deve ter pelo menos 6 caracteres.");
+        else if (senha.contains(" "))
+            throw new InvalidPasswordException("A senha não pode conter espaços");
         return senha;
     }
 

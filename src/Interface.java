@@ -39,11 +39,15 @@ public class Interface {
                 }
                 else if (escolha == 2) {
                     titulo("Entre na sua conta");
-                    logado = iFace.login();
-                    if (logado == null)
-                        System.out.println("\nLogin ou senha inválidos\n");
-                    else 
-                        System.out.println("\nLogado com sucesso! Bem vind@, "+ logado.getNome());
+                    try {
+                        logado = iFace.login();
+                        if (logado == null)
+                            System.out.println("\nLogin ou senha inválidos\n");
+                        else 
+                            System.out.println("\nLogado com sucesso! Bem vind@, "+ logado.getNome());
+                    } catch (WrongPasswordException e) {
+                        System.out.println("\n"+e.getMessage()+"\n");
+                    }
                 }
             }
             else {

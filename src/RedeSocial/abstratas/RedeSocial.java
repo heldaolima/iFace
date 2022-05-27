@@ -10,7 +10,7 @@ import src.RedeSocial.customExceptions.WrongPasswordException;
 
 public interface RedeSocial {
     abstract boolean novaConta();
-    abstract Usuario login();
+    abstract Usuario login() throws WrongPasswordException;
     abstract boolean novoAtributo(Logado logado); 
     abstract boolean editarAtributo(Logado logado);
     abstract boolean enviarSolicitacao(Logado logado);
