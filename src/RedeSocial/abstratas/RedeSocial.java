@@ -3,6 +3,7 @@ package src.RedeSocial.abstratas;
 import src.RedeSocial.Logado;
 import src.RedeSocial.Usuario;
 import src.RedeSocial.customExceptions.ComunityCreatedException;
+import src.RedeSocial.customExceptions.NoAtributesException;
 import src.RedeSocial.customExceptions.NoAvaliableUsersException;
 import src.RedeSocial.customExceptions.NoComunitiesException;
 import src.RedeSocial.customExceptions.NoFriendsException;
@@ -14,7 +15,7 @@ public interface RedeSocial {
     abstract boolean novaConta();
     abstract Usuario login() throws WrongPasswordException, UserNotFoundException;
     abstract boolean novoAtributo(Logado logado); 
-    abstract boolean editarAtributo(Logado logado);
+    abstract boolean editarAtributo(Logado logado) throws IndexOutOfBoundsException, NoAtributesException;
     abstract boolean enviarSolicitacao(Logado logado) throws IndexOutOfBoundsException, NoAvaliableUsersException;
     abstract boolean responderSolicitacao(Logado logado) throws IndexOutOfBoundsException, NoRequestsException;
     abstract boolean enviarMensagem(Logado logado) throws IndexOutOfBoundsException, NoFriendsException;

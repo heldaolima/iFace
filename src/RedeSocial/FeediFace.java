@@ -35,10 +35,6 @@ public class FeediFace implements Feed{
 
     public void usuarioExcluido(PseudoUser excluido) {
         ArrayList<Publicacao> publiExcluido = getPublicacoes(excluido);
-        // System.out.println("Excluindo as publicações");
-        // for (Publicacao o: publiExcluido) {
-        //     System.out.println(o.toString());
-        // }
         for (Publicacao publi: publiExcluido) {
                 publicacoes.remove(publi);
         }

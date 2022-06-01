@@ -48,7 +48,6 @@ public class IFace implements RedeSocial {
         
         if (login.equals("-1")) return false;
 
-
         while (true) {
             try {
                 System.out.print("Crie uma senha: ");
@@ -67,8 +66,10 @@ public class IFace implements RedeSocial {
     public Logado login() throws WrongPasswordException, UserNotFoundException{
         System.out.print("Insira o seu login: ");        
         Usuario user = getUsuario(sc.nextLine());
+        
         if (user == null) 
             throw new UserNotFoundException();
+        
         System.out.print("Insira a sua senha: ");
         if (user.getSenha().equals(sc.nextLine())) {
             usuarios.remove(user); //temporariamente removido
@@ -107,7 +108,7 @@ public class IFace implements RedeSocial {
                 desc = lerTexto();
                 break;
             } catch (InvalidInputException | EmptyInputException e) {
-                
+                System.err.println(e.getMessage());
             }
         }
 
@@ -125,11 +126,9 @@ public class IFace implements RedeSocial {
     }
 
     @Override
-    public boolean editarAtributo(Logado logado) throws IndexOutOfBoundsException{
-        if (logado.qtdAtributos() == 0) {
-            System.out.println("Não há atributos!");
-            return false;
-        }
+    public boolean editarAtributo(Logado logado) throws IndexOutOfBoundsException, NoAtributesException{
+        if (logado.qtdAtributos() == 0) 
+            throw new NoAtributesException();
         
         logado.mostrarAtributos();
         int i;
@@ -202,14 +201,12 @@ public class IFace implements RedeSocial {
             throws IndexOutOfBoundsException, NoAvaliableUsersException{
         ArrayList<Integer> disponiveis = mostrarUsuariosSolicitacao(logado);
         
-        if (disponiveis.size() == 0) {
-            System.out.println("Não há usuários disponíveis");
-            return false;
-        }
+        if (disponiveis.size() == 0)
+            throw new NoAvaliableUsersException();
 
         System.out.print("Mandar solicitação para [índice]: ");
+        
         int i;
-
         while (true) {
             try {
                 i = Integer.parseInt(sc.nextLine());
@@ -221,11 +218,8 @@ public class IFace implements RedeSocial {
         }
         
         Solicitacao sol = new Solicitacao(logado.getNome(), logado.getLogin(), logado.qtdAmigos());
-        
-        if (!disponiveis.contains(i))
-            throw new IndexOutOfBoundsException();
 
-        usuarios.get(i).recebeSolicitacao(sol);
+        usuarios.get(i).recebeSolicitacao(sol); // IndexOutOfBouds aqui
 
         return true;        
     }
@@ -465,6 +459,7 @@ public class IFace implements RedeSocial {
     @Override
     public boolean excluirConta(Logado logado) throws WrongPasswordException{
         System.out.println("Para confirmar a operação, insira a sua senha novamente: ");
+        
         if (!logado.getSenha().equals(sc.nextLine())) 
             throw new WrongPasswordException();
         System.out.println("Excluindo sua conta...");

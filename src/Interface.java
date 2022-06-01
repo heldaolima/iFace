@@ -4,6 +4,7 @@ import java.util.Scanner;
 import src.RedeSocial.IFace;
 import src.RedeSocial.Logado;
 import src.RedeSocial.customExceptions.ComunityCreatedException;
+import src.RedeSocial.customExceptions.NoAtributesException;
 import src.RedeSocial.customExceptions.NoAvaliableUsersException;
 import src.RedeSocial.customExceptions.NoFriendsException;
 import src.RedeSocial.customExceptions.NoRequestsException;
@@ -84,6 +85,8 @@ public class Interface {
                         }
                     } catch(IndexOutOfBoundsException e) {
                         System.err.println("\nErro! Atributo não encontrado\n");
+                    } catch(NoAtributesException e) {
+                        System.err.println(e.getMessage());
                     }
                 }
                 else if (escolha == 3) {
