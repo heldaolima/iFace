@@ -5,7 +5,6 @@ import java.util.Scanner;
 
 import src.RedeSocial.abstratas.RedeSocial;
 import src.RedeSocial.customExceptions.*;
-import src.RedeSocial.Entrada;
 import src.usuario.Amigo;
 import src.usuario.Atributo;
 import src.usuario.Mensagem;
@@ -18,54 +17,6 @@ public class IFace implements RedeSocial {
     protected ArrayList<Comunidade> comunidades = new ArrayList<Comunidade>();
     protected PseudoUser pseudoLogado = null;
     public Scanner sc = new Scanner(System.in);
-
-    // Custom exceptions here
-
-    public String lerSenha() throws InvalidPasswordException, EmptyInputException {
-        String senha = sc.nextLine();
-        if (!entradaValida(senha))
-            throw new EmptyInputException();
-        else if (allSpaces(senha))
-            throw new InvalidPasswordException("A senha não pode ser só de espaços.");
-        else if (senha.length() < 6)
-            throw new InvalidPasswordException("A senha deve ter pelo menos 6 caracteres.");
-        else if (senha.contains(" "))
-            throw new InvalidPasswordException("A senha não pode conter espaços");
-        return senha;
-    }
-
-    public String lerLogin() throws InvalidLoginException, EmptyInputException {
-        String login = sc.nextLine();
-        if (!entradaValida(login)) 
-            throw new EmptyInputException();
-        else if (loginUsado(login))
-            throw new InvalidLoginException("Este login já está em uso.");    
-        else if (!loginValido(login))
-            throw new InvalidLoginException("Seu login não pode conter espaços nem '@'.");       
-        else if (allNumbers(login))
-            throw new InvalidLoginException("Seu login não pode ser composto apenas de números");
-        return login;
-    }
-
-    public String lerTexto() throws InvalidInputException, EmptyInputException {
-        String texto = sc.nextLine();
-        if (!entradaValida(texto))
-            throw new EmptyInputException();
-        else if (allSpaces(texto))
-            throw new InvalidInputException("A entrada não pode ser só de espaços.");
-        return texto;
-    }
-
-    public String lerNome() throws InvalidInputException, EmptyInputException {
-        String nome = sc.nextLine();
-        if (!entradaValida(nome)) 
-            throw new EmptyInputException();
-        else if (!nomeValido(nome))
-            throw new InvalidInputException("A entrada não pode conter números nem símbolos.");
-        else if (allSpaces(nome))
-            throw new InvalidInputException("A entrada pode ser só de espaços.");
-        return nome;
-    }
 
     @Override
     public boolean novaConta(){
@@ -88,14 +39,17 @@ public class IFace implements RedeSocial {
             try {
                 System.out.print("Crie um login: ");
                 login.setEntrada(sc.nextLine());
-                break;
+                if (loginUsado(login.getEntrada()))
+                    System.out.println("Este login já está em uso.");
+                else
+                    break;
             } catch (InvalidInputException e) {
                 System.err.println(e.getMessage());
             }
         }
         
         
-        if (login.equals("-1")) return false;
+        if (login.getEntrada().equals("-1")) return false;
 
         while (true) {
             try {
@@ -135,43 +89,42 @@ public class IFace implements RedeSocial {
 
         Atributo novo = new Atributo();
 
-        String nome, desc;
+        Entrada nome = new Nome(), desc = new Texto();
         while (true) {
             try {
                 System.out.print("Nome do atributo: ");
-                nome = lerTexto();
+                nome.setEntrada(sc.nextLine());
                 break;
-            } catch (InvalidInputException | EmptyInputException e) {
+            } catch (InvalidInputException e) {
                 System.err.println(e.getMessage());
             }
         }
 
-        if (nome.equals("-1") ) 
+        if (nome.getEntrada().equals("-1") ) 
             return false;
         
-        novo.setNome(nome);
+        novo.setNome(nome.getEntrada());
         
         while (true) {
             try {
                 System.out.print("Descrição do atributo: ");
-                desc = lerTexto();
+                desc.setEntrada(sc.nextLine());
                 break;
-            } catch (InvalidInputException | EmptyInputException e) {
+            } catch (InvalidInputException e) {
                 System.err.println(e.getMessage());
             }
         }
 
-        if (desc.equals("-1"))
+        if (desc.getEntrada().equals("-1"))
             return false;
 
-            novo.setDescricao(desc);
+        novo.setDescricao(desc.getEntrada());
         
         System.out.println("Seu atributo: ");
         System.out.println(novo.toString());
 
         logado.novoAtributo(novo);
         return true;
-
     }
 
     @Override
@@ -213,33 +166,38 @@ public class IFace implements RedeSocial {
 
             }
             
-            String novo;
+            Entrada nome = new Nome(), desc = new Texto();
             if (esc == 1) {
                 while (true) {
                     try {
                         System.out.print("\nInsira o novo nome: ");
-                        novo = lerNome();
+                        nome.setEntrada(sc.nextLine());
                         break;
-                    } catch (InvalidInputException | EmptyInputException e) {
+                    } catch (InvalidInputException e) {
                         System.err.println(e.getMessage());
                     }
                 }
-                if (novo == "-1") return false;
+                if (nome.getEntrada().equals("-1")) 
+                    return false;
 
-                logado.editarAtributoNome(i, novo);
+                logado.editarAtributoNome(i, nome.getEntrada());
+                System.out.println("Nome editado");
             }
             else if (esc == 2) {
                 System.out.print("\nInsira a nova descrição: ");
                 while (true) {
                     try {
-                        novo = lerTexto();
+                        desc.setEntrada(sc.nextLine());
                         break;
-                    } catch (InvalidInputException | EmptyInputException e) {
+                    } catch (InvalidInputException e) {
                         System.err.println(e.getMessage());
                     }
                 }
-                if (novo.equals("-1")) return false;
-                logado.editarAtributoDescricao(i, novo);
+                if (desc.getEntrada().equals("-1")) 
+                    return false;
+                
+                logado.editarAtributoDescricao(i, desc.getEntrada());
+                System.out.println("Descrição editada");
             }
         }
         return true;
@@ -301,6 +259,7 @@ public class IFace implements RedeSocial {
         System.out.println("[1] Aceitar\n[2] Recusar\n[-1] Cancelar");
         System.out.print("Escolha: ");
         int esc;
+        
         while (true) {
             try {
                 esc = Integer.parseInt(sc.nextLine());
@@ -348,25 +307,25 @@ public class IFace implements RedeSocial {
             }
 
         }
-       
+
         //IndexOutOfBoundsException
        logado.getAmigo(i).mostrarMensagens();
 
         Mensagem msg = new Mensagem();
         msg.setSender(logado.getLogin());
-        String conteudo;
+        Entrada conteudo = new Texto();
         
         while (true) {
             try {
                 System.out.println("Insira a nova mensagem: ");
-                conteudo = lerTexto();  
+                conteudo.setEntrada(sc.nextLine()); 
                 break;             
-            } catch(InvalidInputException | EmptyInputException e) {
+            } catch(InvalidInputException e) {
                 System.err.println(e.getMessage());
             }
         }
 
-        msg.setContent(conteudo);
+        msg.setContent(conteudo.getEntrada());
         logado.getAmigo(i).novaMensagem(msg); //o amigo tem a mensagem;
 
         return logado.enviarMensagem(logado.getAmigo(i), msg, usuarios); //para que o Usuario destinatário receba a mensagem
@@ -378,36 +337,35 @@ public class IFace implements RedeSocial {
             throw new ComunityCreatedException();
 
         System.out.println("Insira -1 no lugar do nome ou da descrição para cancelar");
-        String nome;
+        Entrada nome = new Nome();
         while (true) {
             try {
                 System.out.print("Insira o nome da comunidade: ");
-                nome = lerNome();
+                nome.setEntrada(sc.nextLine());
                 break;
-            } catch (InvalidInputException | EmptyInputException e) {
+            } catch (InvalidInputException e) {
                 System.err.println(e.getMessage());
             }
-
         }
         
         if (nome.equals("-1")) 
             return false;
 
-        String descricao;
+        Entrada descricao = new Texto();
         while (true) {
             try {
                 System.out.print("Insira a descrição da comunidade: ");
-                descricao = lerTexto();
+                descricao.setEntrada(sc.nextLine());
                 break;
                 
-            } catch (InvalidInputException | EmptyInputException e) {
+            } catch (InvalidInputException e) {
                 System.err.println(e.getMessage());
             }
         }
 
         if (descricao.equals("-1")) return false;
 
-        Comunidade comunidade = new Comunidade(nome, descricao, pseudoLogado);
+        Comunidade comunidade = new Comunidade(nome.getEntrada(), descricao.getEntrada(), pseudoLogado);
         comunidades.add(comunidade);
 
         return logado.criarComunidade(comunidade);
@@ -450,21 +408,20 @@ public class IFace implements RedeSocial {
 
     @Override
     public boolean publicarNoFeed(Logado logado) {
-        String conteudo;
+        Entrada conteudo = new Texto();
         System.out.println("No que você está pensando? (-1) cancela");
         
         while(true) {
             try {
-                conteudo = lerTexto();
+                conteudo.setEntrada(sc.nextLine());
                 break;
-            } catch (EmptyInputException | InvalidInputException e) {
+            } catch (InvalidInputException e) {
                 System.err.println(e.getMessage());
             }
         }
         
-        if (conteudo.equals("-1")) 
+        if (conteudo.getEntrada().equals("-1")) 
             return false;
-        
 
         System.out.println("Defina a privacidade da publicação:\n[1] Pública\n[2] Privada\n[-1] Cancelar publicação");
         System.out.print("Sua escolha: ");
@@ -486,9 +443,9 @@ public class IFace implements RedeSocial {
         if (esc == -1) 
             return false;
         else if (esc == 1) 
-            feed.publicar(new Publicacao(pseudoLogado, conteudo, false));
+            feed.publicar(new Publicacao(pseudoLogado, conteudo.getEntrada(), false));
         else
-            feed.publicar(new Publicacao(pseudoLogado, conteudo, true));
+            feed.publicar(new Publicacao(pseudoLogado, conteudo.getEntrada(), true));
 
         return true;
     }
@@ -548,12 +505,6 @@ public class IFace implements RedeSocial {
         return false;
     }
 
-    public boolean loginValido(String login) {
-        if (login.contains(" ") || login.contains("@") || login.contains("#"))
-            return false;
-        return true;
-    }
-
     public ArrayList<Integer> mostrarUsuariosSolicitacao(Logado logado) {
         ArrayList<Integer> ans = new ArrayList<Integer>();
         int i = 0;
@@ -596,45 +547,4 @@ public class IFace implements RedeSocial {
             System.out.println(u.dadosBasicos());
         }
     }
-
-    // não pode ser tudo espaço nem ter números
-    public boolean nomeValido(String entrada) {
-        String symbols = "!@#$%&*()'+,-./:;<=>?[]^_`{|}";
-        if (!entrada.equals("-1")) {
-            char[] chars = entrada.toCharArray();
-            for (char c: chars) {
-                if (Character.isDigit(c) || symbols.contains(Character.toString(c)))
-                    return false;
-            }
-        }
-        return true;
-    }
-
-    public boolean entradaValida(String entrada) {
-        if (entrada.equals("") || entrada == null)
-            return false;
-        return true;
-    }
-
-    public boolean allSpaces(String entrada) {
-        char[] chars = entrada.toCharArray();
-        int contSpaces = 0;
-        for (char c: chars) {
-            if (Character.isSpaceChar(c)) 
-                contSpaces++;
-        }
-        return contSpaces == entrada.length();
-    }
-
-    public boolean allNumbers(String entrada) {
-        char[] chars = entrada.toCharArray();
-        int contDigits = 0;
-        for (char c: chars) {
-            if (Character.isDigit(c)) 
-                contDigits++;
-        }
-        return contDigits == entrada.length();
-    }
 }
-
-

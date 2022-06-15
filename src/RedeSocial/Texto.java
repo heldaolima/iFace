@@ -9,7 +9,7 @@ public class Texto extends Entrada{
 
     @Override
     void setEntrada(String entrada) throws InvalidInputException {
-        if (entrada.isEmpty())
+        if (isEmpty(entrada))
             throw new InvalidInputException("Entrada inválida");
         this.entrada = entrada;
         
