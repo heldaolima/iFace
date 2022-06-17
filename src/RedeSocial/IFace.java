@@ -18,48 +18,36 @@ public class IFace implements RedeSocial {
     protected PseudoUser pseudoLogado = null;
     public Scanner sc = new Scanner(System.in);
 
+    public void lerEntrada(Entrada entrada, String comando) {
+        while(true) {
+            try {
+                System.out.print(comando);
+                entrada.setEntrada(sc.nextLine());
+                break;
+            } catch (InvalidInputException e) {
+                System.err.println(e.getMessage());
+            }
+        }
+    }
+
     @Override
     public boolean novaConta(){
         System.out.println("Caso queira cancelar, insira -1 no lugar do nome ou no lugar de login");
         Entrada nome = new Nome(), login = new Login(), senha = new Senha();
 
-        while (true) {
-            try {
-                System.out.print("Insira o seu nome e sobrenome: ");
-                nome.setEntrada(sc.nextLine());
-                break;
-            } catch(InvalidInputException e) {
-                System.err.println(e.getMessage());
-            }
-        }
-
-        if (nome.getEntrada().equals("-1")) return false;
-
-        while (true) {
-            try {
-                System.out.print("Crie um login: ");
-                login.setEntrada(sc.nextLine());
-                if (loginUsado(login.getEntrada()))
-                    System.out.println("Este login já está em uso.");
-                else
-                    break;
-            } catch (InvalidInputException e) {
-                System.err.println(e.getMessage());
-            }
-        }
+        lerEntrada(nome, "Insira o seu nome e sobrenome: ");
+        if (nome.getEntrada().equals("-1")) 
+            return false;
         
+        lerEntrada(login, "Crie um login: ");
+        while(loginUsado(login.getEntrada())) {
+            System.out.println("Este login já está em uso.");
+            lerEntrada(login, "Crie um login");
+        }
         
         if (login.getEntrada().equals("-1")) return false;
 
-        while (true) {
-            try {
-                System.out.print("Crie uma senha: ");
-                senha.setEntrada(sc.nextLine());
-                break;
-            } catch (InvalidInputException e) {
-                System.err.println(e.getMessage());
-            }
-        }
+        lerEntrada(senha, "Crie uma senha: ");
 
         usuarios.add(new Usuario(nome.getEntrada(), login.getEntrada(), senha.getEntrada()));
         return true;
@@ -85,45 +73,23 @@ public class IFace implements RedeSocial {
 
     @Override
     public boolean novoAtributo(Logado logado) {
+        Entrada nome = new Nome(), desc = new Texto();
+
         System.out.println("Caso queira cancelar, insira -1 no lugar do nome ou da descrição");
 
-        Atributo novo = new Atributo();
-
-        Entrada nome = new Nome(), desc = new Texto();
-        while (true) {
-            try {
-                System.out.print("Nome do atributo: ");
-                nome.setEntrada(sc.nextLine());
-                break;
-            } catch (InvalidInputException e) {
-                System.err.println(e.getMessage());
-            }
-        }
-
+        lerEntrada(nome, "Nome do atributo: ");
+        
         if (nome.getEntrada().equals("-1") ) 
             return false;
         
-        novo.setNome(nome.getEntrada());
         
-        while (true) {
-            try {
-                System.out.print("Descrição do atributo: ");
-                desc.setEntrada(sc.nextLine());
-                break;
-            } catch (InvalidInputException e) {
-                System.err.println(e.getMessage());
-            }
-        }
+        lerEntrada(desc, "Descrição do atributo: ");
 
         if (desc.getEntrada().equals("-1"))
             return false;
 
-        novo.setDescricao(desc.getEntrada());
-        
-        System.out.println("Seu atributo: ");
-        System.out.println(novo.toString());
-
-        logado.novoAtributo(novo);
+        logado.novoAtributo(new Atributo(nome.getEntrada(), desc.getEntrada()));
+        System.out.println("Atributo criado.\n"+nome.getEntrada()+" | "+desc.getEntrada());
         return true;
     }
 
@@ -168,36 +134,22 @@ public class IFace implements RedeSocial {
             
             Entrada nome = new Nome(), desc = new Texto();
             if (esc == 1) {
-                while (true) {
-                    try {
-                        System.out.print("\nInsira o novo nome: ");
-                        nome.setEntrada(sc.nextLine());
-                        break;
-                    } catch (InvalidInputException e) {
-                        System.err.println(e.getMessage());
-                    }
-                }
+                lerEntrada(nome, "Insira o novo nome: ");
+                
                 if (nome.getEntrada().equals("-1")) 
                     return false;
 
                 logado.editarAtributoNome(i, nome.getEntrada());
-                System.out.println("Nome editado");
+                System.out.println("Nome editado.");
             }
             else if (esc == 2) {
-                System.out.print("\nInsira a nova descrição: ");
-                while (true) {
-                    try {
-                        desc.setEntrada(sc.nextLine());
-                        break;
-                    } catch (InvalidInputException e) {
-                        System.err.println(e.getMessage());
-                    }
-                }
+                lerEntrada(desc, "Insira a nova descrição");
+                
                 if (desc.getEntrada().equals("-1")) 
                     return false;
                 
                 logado.editarAtributoDescricao(i, desc.getEntrada());
-                System.out.println("Descrição editada");
+                System.out.println("Descrição editada.");
             }
         }
         return true;
@@ -223,10 +175,8 @@ public class IFace implements RedeSocial {
             }
 
         }
-        
-        Solicitacao sol = new Solicitacao(logado.getNome(), logado.getLogin(), logado.qtdAmigos());
 
-        usuarios.get(i).recebeSolicitacao(sol); // IndexOutOfBouds aqui
+        usuarios.get(i).recebeSolicitacao(new Solicitacao(logado.getNome(), logado.getLogin(), logado.qtdAmigos())); // IndexOutOfBouds aqui
 
         return true;        
     }
@@ -314,17 +264,8 @@ public class IFace implements RedeSocial {
         Mensagem msg = new Mensagem();
         msg.setSender(logado.getLogin());
         Entrada conteudo = new Texto();
+        lerEntrada(conteudo, "Insira a nova mensagem: \n");
         
-        while (true) {
-            try {
-                System.out.println("Insira a nova mensagem: ");
-                conteudo.setEntrada(sc.nextLine()); 
-                break;             
-            } catch(InvalidInputException e) {
-                System.err.println(e.getMessage());
-            }
-        }
-
         msg.setContent(conteudo.getEntrada());
         logado.getAmigo(i).novaMensagem(msg); //o amigo tem a mensagem;
 
@@ -338,34 +279,20 @@ public class IFace implements RedeSocial {
 
         System.out.println("Insira -1 no lugar do nome ou da descrição para cancelar");
         Entrada nome = new Nome();
-        while (true) {
-            try {
-                System.out.print("Insira o nome da comunidade: ");
-                nome.setEntrada(sc.nextLine());
-                break;
-            } catch (InvalidInputException e) {
-                System.err.println(e.getMessage());
-            }
-        }
+
+        lerEntrada(nome, "Insira o nome da comunidade: ");
         
-        if (nome.equals("-1")) 
+        if (nome.getEntrada().equals("-1")) 
             return false;
 
         Entrada descricao = new Texto();
-        while (true) {
-            try {
-                System.out.print("Insira a descrição da comunidade: ");
-                descricao.setEntrada(sc.nextLine());
-                break;
-                
-            } catch (InvalidInputException e) {
-                System.err.println(e.getMessage());
-            }
-        }
+        lerEntrada(descricao, "Insira a descrição da comunidade");
 
-        if (descricao.equals("-1")) return false;
+        if (descricao.getEntrada().equals("-1")) 
+            return false;
 
         Comunidade comunidade = new Comunidade(nome.getEntrada(), descricao.getEntrada(), pseudoLogado);
+        
         comunidades.add(comunidade);
 
         return logado.criarComunidade(comunidade);
@@ -409,16 +336,8 @@ public class IFace implements RedeSocial {
     @Override
     public boolean publicarNoFeed(Logado logado) {
         Entrada conteudo = new Texto();
-        System.out.println("No que você está pensando? (-1) cancela");
         
-        while(true) {
-            try {
-                conteudo.setEntrada(sc.nextLine());
-                break;
-            } catch (InvalidInputException e) {
-                System.err.println(e.getMessage());
-            }
-        }
+        lerEntrada(conteudo, "No que você está pensando? (-1) cancela\n");
         
         if (conteudo.getEntrada().equals("-1")) 
             return false;

@@ -3,6 +3,11 @@ package src.usuario;
 public class Atributo {
     private String nome, descricao;
 
+    public Atributo(String nome, String descricao) {
+        this.nome = nome;
+        this.descricao = descricao;
+    }
+
     public boolean setNome(String nome) {
         if (nome == null || nome =="" || nome.equals(" "))
             return false;
