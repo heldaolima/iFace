@@ -17,24 +17,12 @@ public class IFace implements RedeSocial {
     protected ArrayList<Comunidade> comunidades = new ArrayList<Comunidade>();
     protected PseudoUser pseudoLogado = null;
     public Scanner sc = new Scanner(System.in);
-
-    public void lerEntrada(Entrada entrada, String comando) {
-        while(true) {
-            try {
-                System.out.print(comando);
-                entrada.setEntrada(sc.nextLine());
-                break;
-            } catch (InvalidInputException e) {
-                System.err.println(e.getMessage());
-            }
-        }
-    }
-
+    
     @Override
     public boolean novaConta(){
         System.out.println("Caso queira cancelar, insira -1 no lugar do nome ou no lugar de login");
         Entrada nome = new Nome(), login = new Login(), senha = new Senha();
-
+        
         lerEntrada(nome, "Insira o seu nome e sobrenome: ");
         if (nome.getEntrada().equals("-1")) 
             return false;
@@ -42,7 +30,7 @@ public class IFace implements RedeSocial {
         lerEntrada(login, "Crie um login: ");
         while(loginUsado(login.getEntrada())) {
             System.out.println("Este login já está em uso.");
-            lerEntrada(login, "Crie um login");
+            lerEntrada(login, "Crie um login: ");
         }
         
         if (login.getEntrada().equals("-1")) return false;
@@ -464,6 +452,18 @@ public class IFace implements RedeSocial {
     public void mostrarUsuarios() {
         for (Usuario u: usuarios) {
             System.out.println(u.dadosBasicos());
+        }
+    }
+
+    public void lerEntrada(Entrada entrada, String comando) {
+        while(true) {
+            try {
+                System.out.print(comando);
+                entrada.setEntrada(sc.nextLine());
+                break;
+            } catch (InvalidInputException e) {
+                System.err.println(e.getMessage());
+            }
         }
     }
 }
