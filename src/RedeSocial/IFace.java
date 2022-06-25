@@ -16,6 +16,7 @@ public class IFace implements RedeSocial {
     private ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
     protected FeediFace feed = new FeediFace();
     protected ArrayList<Comunidade> comunidades = new ArrayList<Comunidade>();
+    public Logado logado1 = null;
     protected PseudoUser pseudoLogado = null;
     public Scanner sc = new Scanner(System.in);
     
@@ -43,7 +44,7 @@ public class IFace implements RedeSocial {
     }
 
     @Override
-    public Logado login() throws WrongPasswordException, UserNotFoundException{
+    public boolean login() throws WrongPasswordException, UserNotFoundException{
         System.out.print("Insira o seu login: ");        
         Usuario user = getUsuario(sc.nextLine());
         
@@ -54,7 +55,8 @@ public class IFace implements RedeSocial {
         if (user.getSenha().equals(sc.nextLine())) {
             usuarios.remove(user); //temporariamente removido
             pseudoLogado = new PseudoUser(user.getNome(), user.getLogin());
-            return (new Logado(user.getNome(), user.getLogin(), user.getSenha(), user.amigos, user.solicitacoes, user.comunidade, user.comunidadesMembro, user.atributos));
+            this.logado1 = (new Logado(user.getNome(), user.getLogin(), user.getSenha(), user.amigos, user.solicitacoes, user.comunidade, user.comunidadesMembro, user.atributos));
+            return true;
         }
         else
             throw new WrongPasswordException();

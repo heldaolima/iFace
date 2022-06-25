@@ -7,6 +7,7 @@ import src.usuario.Mensagem;
 import src.usuario.Solicitacao;
 
 public class Logado extends Usuario {
+    
     public Logado(String nome, String login, String senha, ArrayList<Amigo> amigos, ArrayList<Solicitacao> solicitacoes, Comunidade comunidade,  ArrayList<String> comunidadesMembro, ArrayList<Atributo> atributos) {
         super(nome, login, senha);
         this.amigos = amigos;
@@ -15,7 +16,16 @@ public class Logado extends Usuario {
         this.comunidadesMembro = comunidadesMembro;
         this.atributos = atributos;
     }
-
+    
+    public Logado(Logado logado) {
+        super(logado.getNome(), logado.getSenha(), logado.getSenha());
+        this.amigos = logado.amigos;
+        this.solicitacoes = logado.solicitacoes;
+        this.comunidade = logado.comunidade;
+        this.comunidadesMembro = logado.comunidadesMembro;
+        this.atributos = logado.atributos;
+    }
+    
     public void editarAtributoNome(int i, String nome) {
         atributos.get(i).setNome(nome);
     }
