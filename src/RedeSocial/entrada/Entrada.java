@@ -1,4 +1,4 @@
-package src.RedeSocial;
+package src.RedeSocial.entrada;
 
 import src.RedeSocial.customExceptions.*;
 
@@ -8,7 +8,7 @@ public abstract class Entrada {
     public Entrada() {
 	}
 
-	abstract void setEntrada(String entrada) 
+	abstract public void setEntrada(String entrada) 
             throws InvalidInputException; //verifica a validade de cada tipo de entrada
 
     public String getEntrada() {

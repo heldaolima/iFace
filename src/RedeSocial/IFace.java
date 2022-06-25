@@ -3,6 +3,7 @@ package src.RedeSocial;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import src.RedeSocial.entrada.*;
 import src.RedeSocial.abstratas.RedeSocial;
 import src.RedeSocial.customExceptions.*;
 import src.usuario.Amigo;

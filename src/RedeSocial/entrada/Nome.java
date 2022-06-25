@@ -1,4 +1,4 @@
-package src.RedeSocial;
+package src.RedeSocial.entrada;
 
 
 import src.RedeSocial.customExceptions.InvalidInputException;

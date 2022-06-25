@@ -1,4 +1,4 @@
-package src.RedeSocial;
+package src.RedeSocial.entrada;
 
 import src.RedeSocial.customExceptions.InvalidInputException;
 
@@ -8,7 +8,7 @@ public class Login extends Entrada{
     }
     // ideia: Transformar todas as exceções de input invalido em apenas InvalidInputException
     @Override
-    void setEntrada(String entrada) throws InvalidInputException {
+    public void setEntrada(String entrada) throws InvalidInputException {
         if (isEmpty(entrada))
             throw new InvalidInputException("Entrada inválida");
         else if (isInvalidLogin(entrada))
