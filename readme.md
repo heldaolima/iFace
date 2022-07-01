@@ -108,7 +108,7 @@ Com a criação da classe `Entrada`, todos os métodos que precisassem ler uma e
         }
 Pois toda entrada precisa ser lida e tratada de forma amigável. 
 
-### Padrão aplicado
+## Padrão aplicado
 **Extract Method**: Esse bloco todo virou o seguinte método: 
     
     public void lerEntrada(Entrada entrada, String comando) {
