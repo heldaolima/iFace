@@ -22,20 +22,19 @@ public class Interface {
                 
                 try {
                     escolha = Integer.parseInt(sc.nextLine());
+                    if (escolha == -1)
+                        break;
+                    escolha--;
+                    try {
+                        if (unloggedIn.get(escolha).execute(iFace))
+                            System.out.print(unloggedIn.get(escolha).successMsg());
+                        else
+                            System.out.print(unloggedIn.get(escolha).failureMsg());
+                    } catch (IndexOutOfBoundsException e) {
+                        System.err.println("\nEscolha inválida. Insira um número válido\n");
+                    }
                 } catch (NumberFormatException e) {
                     System.err.println("\nEntrada inválida. Por favor, insira um número\n");
-                }
-                if (escolha == -1)
-                    break;
-                
-                escolha--;
-                try {
-                    if (unloggedIn.get(escolha).execute(iFace))
-                        System.out.print(unloggedIn.get(escolha).successMsg());
-                    else
-                        System.out.print(unloggedIn.get(escolha).failureMsg());
-                } catch (IndexOutOfBoundsException e) {
-                    System.err.println("\nEscolha inválida. Insira um número válido\n");
                 }
             }
             else {
@@ -45,18 +44,17 @@ public class Interface {
                 
                 try {
                     escolha = Integer.parseInt(sc.nextLine());
+                    escolha--;
+                    try {
+                        if (loggedIn.get(escolha).execute(iFace))
+                            System.out.print(loggedIn.get(escolha).successMsg());
+                        else
+                            System.out.print(loggedIn.get(escolha).failureMsg());
+                    } catch (IndexOutOfBoundsException e) {
+                        System.err.println("\nEscolha inválida. Insira um número válido\n");
+                    }
                 } catch (NumberFormatException e) {
                     System.err.println("\nEntrada inválida. Por favor, insira um número\n");
-                }
-                
-                escolha--;
-                try {
-                    if (loggedIn.get(escolha).execute(iFace))
-                        System.out.print(loggedIn.get(escolha).successMsg());
-                    else
-                        System.out.print(loggedIn.get(escolha).failureMsg());
-                } catch (IndexOutOfBoundsException e) {
-                    System.err.println("\nEscolha inválida. Insira um número válido\n");
                 }
             }
         }
