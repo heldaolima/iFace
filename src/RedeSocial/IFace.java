@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import src.RedeSocial.entrada.*;
-import src.RedeSocial.abstratas.RedeSocial;
 import src.RedeSocial.customExceptions.*;
 import src.usuario.Amigo;
 import src.usuario.Atributo;
@@ -12,15 +11,14 @@ import src.usuario.Mensagem;
 import src.usuario.PseudoUser;
 import src.usuario.Solicitacao;
 
-public class IFace implements RedeSocial {
+public class IFace {
     private ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
     protected FeediFace feed = new FeediFace();
     protected ArrayList<Comunidade> comunidades = new ArrayList<Comunidade>();
-    public Logado logado1 = null;
+    public Logado logado = null;
     protected PseudoUser pseudoLogado = null;
     public Scanner sc = new Scanner(System.in);
     
-    @Override
     public boolean novaConta(){
         System.out.println("Caso queira cancelar, insira -1 no lugar do nome ou no lugar de login");
         Entrada nome = new Nome(), login = new Login(), senha = new Senha();
@@ -43,7 +41,6 @@ public class IFace implements RedeSocial {
         return true;
     }
 
-    @Override
     public boolean login() throws WrongPasswordException, UserNotFoundException{
         System.out.print("Insira o seu login: ");        
         Usuario user = getUsuario(sc.nextLine());
@@ -55,27 +52,22 @@ public class IFace implements RedeSocial {
         if (user.getSenha().equals(sc.nextLine())) {
             usuarios.remove(user); //temporariamente removido
             pseudoLogado = new PseudoUser(user.getNome(), user.getLogin());
-            this.logado1 = (new Logado(user.getNome(), user.getLogin(), user.getSenha(), user.amigos, user.solicitacoes, user.comunidade, user.comunidadesMembro, user.atributos));
+            logado = (new Logado(user.getNome(), user.getLogin(), user.getSenha(), user.amigos, user.solicitacoes, user.comunidade, user.comunidadesMembro, user.atributos));
             return true;
         }
         else
             throw new WrongPasswordException();
     }
 
-    @Override
-    public boolean novoAtributo(Logado logado) {
+    public boolean novoAtributo() {
         Entrada nome = new Nome(), desc = new Texto();
-
         System.out.println("Caso queira cancelar, insira -1 no lugar do nome ou da descrição");
-
         lerEntrada(nome, "Nome do atributo: ");
         
         if (nome.getEntrada().equals("-1") ) 
             return false;
         
-        
         lerEntrada(desc, "Descrição do atributo: ");
-
         if (desc.getEntrada().equals("-1"))
             return false;
 
@@ -84,8 +76,7 @@ public class IFace implements RedeSocial {
         return true;
     }
 
-    @Override
-    public boolean editarAtributo(Logado logado) throws IndexOutOfBoundsException, NoAtributesException{
+    public boolean editarAtributo() throws IndexOutOfBoundsException, NoAtributesException{
         if (logado.qtdAtributos() == 0) 
             throw new NoAtributesException();
         
@@ -146,8 +137,7 @@ public class IFace implements RedeSocial {
         return true;
     }
 
-    @Override
-    public boolean enviarSolicitacao(Logado logado) 
+    public boolean enviarSolicitacao() 
             throws IndexOutOfBoundsException, NoAvaliableUsersException{
         ArrayList<Integer> disponiveis = mostrarUsuariosSolicitacao(logado);
         
@@ -172,8 +162,7 @@ public class IFace implements RedeSocial {
         return true;        
     }
 
-    @Override
-    public boolean responderSolicitacao(Logado logado) 
+    public boolean responderSolicitacao() 
             throws IndexOutOfBoundsException, NoRequestsException {
         
         if (logado.qtdSolicitacoes() == 0)
@@ -217,17 +206,16 @@ public class IFace implements RedeSocial {
         if (esc == -1) return false;
 
         else {
-            logado.solicitacoes.remove(logado.getSolicitacao(i));
             if (esc == 2)
                 System.out.println("Solicitação recusada");
             else 
                 logado.respoderSolicitacao(logado.getSolicitacao(i), usuarios);   
+            logado.solicitacoes.remove(logado.getSolicitacao(i));
         }
         return true;
     }
 
-    @Override
-    public boolean enviarMensagem(Logado logado) 
+    public boolean enviarMensagem() 
             throws IndexOutOfBoundsException, NoFriendsException{
         
         if (logado.qtdAmigos() == 0) 
@@ -263,8 +251,7 @@ public class IFace implements RedeSocial {
         return logado.enviarMensagem(logado.getAmigo(i), msg, usuarios); //para que o Usuario destinatário receba a mensagem
     }
 
-    @Override
-    public boolean novaComunidade(Logado logado) throws ComunityCreatedException{
+    public boolean novaComunidade() throws ComunityCreatedException{
         if (logado.temComunidade())
             throw new ComunityCreatedException();
 
@@ -289,8 +276,7 @@ public class IFace implements RedeSocial {
         return logado.criarComunidade(comunidade);
     }
 
-    @Override
-    public boolean virarMembroComunidade(Logado logado) 
+    public boolean virarMembroComunidade() 
                 throws NoComunitiesException, IndexOutOfBoundsException{
         
         ArrayList<Integer> disponiveis = mostrarComunidades(logado);
@@ -319,13 +305,11 @@ public class IFace implements RedeSocial {
         return true;
     }
 
-    @Override
-    public void mostrarFeed(Logado logado) {
+    public void mostrarFeed() {
         logado.verFeed(feed.publicacoes);
     }
 
-    @Override
-    public boolean publicarNoFeed(Logado logado) {
+    public boolean publicarNoFeed() {
         Entrada conteudo = new Texto();
         
         lerEntrada(conteudo, "No que você está pensando? (-1) cancela\n");
@@ -360,20 +344,18 @@ public class IFace implements RedeSocial {
         return true;
     }
 
-    @Override
-    public void resumoDaConta(Logado logado) {
+    public void resumoDaConta() {
         logado.resumoDaConta();
     }
 
-    @Override
-    public Logado logOut(Logado logado) {
+    public Logado logOut() {
         usuarios.add((Usuario) logado); 
         pseudoLogado = null;
+        logado = null;
         return null;
     }
 
-    @Override
-    public boolean excluirConta(Logado logado) throws WrongPasswordException{
+    public boolean excluirConta() throws WrongPasswordException{
         System.out.println("Para confirmar a operação, insira a sua senha novamente: ");
         
         if (!logado.getSenha().equals(sc.nextLine())) 
@@ -394,8 +376,10 @@ public class IFace implements RedeSocial {
         }
 
         feed.usuarioExcluido(pseudoLogado);
+        
         pseudoLogado = null;
-
+        logado = null;
+        
         return true;
     }
     

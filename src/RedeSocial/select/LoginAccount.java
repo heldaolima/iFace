@@ -8,16 +8,14 @@ import src.RedeSocial.Logado;
 public class LoginAccount extends Select{
 
     @Override
-    public boolean call(IFace iFace, Logado logado) {
+    public boolean call(IFace iFace) {
         titulo("Entrar na conta");
         boolean result = false;
         try {
             result = iFace.login();
-            // logado = new Logado(iFace.login());
         } catch (WrongPasswordException | UserNotFoundException e) {
-            System.out.println("\n"+e.getMessage()+"\n");
+            System.out.println(e.getMessage());
         }
-
         return result;
     }
 

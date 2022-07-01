@@ -7,11 +7,11 @@ import src.RedeSocial.customExceptions.NoComunitiesException;
 public class BecomeMember extends Select {
 
     @Override
-    public boolean call(IFace iFace, Logado logado) {
+    public boolean call(IFace iFace) {
         titulo("Entrar em comunidade");
         boolean result = false;
         try {
-            result = iFace.virarMembroComunidade(logado);                      
+            result = iFace.virarMembroComunidade();                      
         } catch (NoComunitiesException e) {
             System.err.println("\n"+e.getMessage()+"\n");
         } catch (IndexOutOfBoundsException e) {
@@ -22,13 +22,11 @@ public class BecomeMember extends Select {
 
     @Override
     public String successMsg() {
-        // TODO Auto-generated method stub
         return "\nVocê virou membro da comunidade!\n";
     }
 
     @Override
     public String failureMsg() {
-        // TODO Auto-generated method stub
         return "\nOperação cancelada\n";
     }
     

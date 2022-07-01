@@ -7,11 +7,11 @@ import src.RedeSocial.customExceptions.NoAtributesException;
 public class EditAtribute extends Select{
 
     @Override
-    public boolean call(IFace iFace, Logado logado) {
+    public boolean call(IFace iFace) {
         titulo("Editar atributo");
         boolean result = false;
         try {
-            result = iFace.editarAtributo(logado);
+            result = iFace.editarAtributo();
         } catch(IndexOutOfBoundsException e) {
             System.err.println("\nErro! Atributo não encontrado\n");
         } catch(NoAtributesException e) {

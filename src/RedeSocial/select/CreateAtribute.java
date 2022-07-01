@@ -6,9 +6,9 @@ import src.RedeSocial.Logado;
 public class CreateAtribute extends Select{
 
     @Override
-    public boolean call(IFace iFace, Logado logado) {
+    public boolean call(IFace iFace) {
         titulo("Criar atributo");
-        return iFace.novoAtributo(logado); 
+        return iFace.novoAtributo(); 
     }
 
     @Override

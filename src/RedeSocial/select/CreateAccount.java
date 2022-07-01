@@ -6,7 +6,7 @@ import src.RedeSocial.Logado;
 public class CreateAccount extends Select{
     
     @Override
-    public boolean call(IFace iFace, Logado logado) {
+    public boolean call(IFace iFace) {
         titulo("Criar conta");
         return iFace.novaConta();
     }

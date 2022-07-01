@@ -7,11 +7,11 @@ import src.RedeSocial.customExceptions.NoRequestsException;
 public class AnswerRequest extends Select{
 
     @Override
-    public boolean call(IFace iFace, Logado logado) {
+    public boolean call(IFace iFace) {
         titulo("Responder solicitação");
         boolean result = false;
         try {
-            result = iFace.responderSolicitacao(logado);
+            result = iFace.responderSolicitacao();
         } catch (IndexOutOfBoundsException e) {
             System.err.println("\nErro! Usuário não encontrado!\n");
         } catch (NoRequestsException e) {
@@ -22,13 +22,11 @@ public class AnswerRequest extends Select{
 
     @Override
     public String successMsg() {
-        // TODO Auto-generated method stub
         return "\nSolicitação respondida\n";
     }
 
     @Override
     public String failureMsg() {
-        // TODO Auto-generated method stub
         return "\nResposta cancelada\n";
     }
     

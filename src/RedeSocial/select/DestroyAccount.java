@@ -7,16 +7,14 @@ import src.RedeSocial.customExceptions.WrongPasswordException;
 public class DestroyAccount extends Select{
 
     @Override
-    public boolean call(IFace iFace, Logado logado) {
+    public boolean call(IFace iFace) {
         titulo("Excluir conta");
         boolean result = false;
         try {
-            result = iFace.excluirConta(logado);
+            result = iFace.excluirConta();
         } catch (WrongPasswordException e) {
             System.err.println("\n"+e.getMessage()+"\n");
         }
-        if (result) 
-            logado = null;
         return result;
     }
 

@@ -7,11 +7,11 @@ import src.RedeSocial.customExceptions.NoAvaliableUsersException;
 public class SendRequest extends Select{
 
     @Override
-    public boolean call(IFace iFace, Logado logado) {
+    public boolean call(IFace iFace) {
         titulo("Enviar solicitação de amizade");
         boolean result = false;
         try {
-            result = iFace.enviarSolicitacao(logado);
+            result = iFace.enviarSolicitacao();
         } catch (IndexOutOfBoundsException e) {
             System.err.println("\nErro! Usuário não encontrado!");
         } catch (NoAvaliableUsersException e) {
@@ -22,13 +22,11 @@ public class SendRequest extends Select{
 
     @Override
     public String successMsg() {
-        // TODO Auto-generated method stub
         return "\nSolicitação enviada!\n";
     }
 
     @Override
     public String failureMsg() {
-        // TODO Auto-generated method stub
         return "\nEnvio de solicitação cancelado\n";
     }
     

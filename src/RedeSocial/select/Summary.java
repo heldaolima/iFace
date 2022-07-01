@@ -6,22 +6,20 @@ import src.RedeSocial.Logado;
 public class Summary extends Select{
 
     @Override
-    public boolean call(IFace iFace, Logado logado) {
+    public boolean call(IFace iFace) {
         titulo("Resumo da conta");
-        iFace.resumoDaConta(logado);
+        iFace.resumoDaConta();
         return true;
     }
 
     @Override
     public String successMsg() {
-        // TODO Auto-generated method stub
-        return null;
+        return "";
     }
 
     @Override
     public String failureMsg() {
-        // TODO Auto-generated method stub
-        return null;
+        return "";
     }
     
 }

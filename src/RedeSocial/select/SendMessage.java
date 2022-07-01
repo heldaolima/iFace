@@ -7,11 +7,11 @@ import src.RedeSocial.customExceptions.NoFriendsException;
 public class SendMessage extends Select {
 
     @Override
-    public boolean call(IFace iFace, Logado logado) {
+    public boolean call(IFace iFace) {
         titulo("Enviar mensagem");
         boolean result = false;
         try {
-           result = iFace.enviarMensagem(logado);
+           result = iFace.enviarMensagem();
         } catch (IndexOutOfBoundsException e) {
             System.err.println("\nErro! Amigo não encontrado!\n");
         } catch (NoFriendsException e) {
@@ -22,13 +22,11 @@ public class SendMessage extends Select {
 
     @Override
     public String successMsg() {
-        // TODO Auto-generated method stub
         return "\nMensagem enviada\n";
     }
 
     @Override
     public String failureMsg() {
-        // TODO Auto-generated method stub
         return "\nEnvio de mensagem cancelado\n";
     }
     
