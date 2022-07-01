@@ -26,10 +26,7 @@ public class Interface {
                         break;
                     escolha--;
                     try {
-                        if (unloggedIn.get(escolha).execute(iFace))
-                            System.out.print(unloggedIn.get(escolha).successMsg());
-                        else
-                            System.out.print(unloggedIn.get(escolha).failureMsg());
+                        call(unloggedIn.get(escolha), iFace);
                     } catch (IndexOutOfBoundsException e) {
                         System.err.println("\nEscolha inválida. Insira um número válido\n");
                     }
@@ -46,10 +43,7 @@ public class Interface {
                     escolha = Integer.parseInt(sc.nextLine());
                     escolha--;
                     try {
-                        if (loggedIn.get(escolha).execute(iFace))
-                            System.out.print(loggedIn.get(escolha).successMsg());
-                        else
-                            System.out.print(loggedIn.get(escolha).failureMsg());
+                        call(loggedIn.get(escolha), iFace);
                     } catch (IndexOutOfBoundsException e) {
                         System.err.println("\nEscolha inválida. Insira um número válido\n");
                     }
@@ -86,6 +80,13 @@ public class Interface {
         logged.add(new DestroyAccount());
         
         return logged;
+    }
+
+    public static void call(Command comando, IFace iface) {
+        if (comando.execute(iface))
+            comando.successMsg();
+        else
+            comando.failureMsg();
     }
 
 }
