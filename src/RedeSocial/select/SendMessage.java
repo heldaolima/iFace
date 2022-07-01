@@ -1,13 +1,12 @@
 package src.RedeSocial.select;
 
 import src.RedeSocial.IFace;
-import src.RedeSocial.Logado;
 import src.RedeSocial.customExceptions.NoFriendsException;
 
-public class SendMessage extends Select {
+public class SendMessage extends Command {
 
     @Override
-    public boolean call(IFace iFace) {
+    public boolean execute(IFace iFace) {
         titulo("Enviar mensagem");
         boolean result = false;
         try {

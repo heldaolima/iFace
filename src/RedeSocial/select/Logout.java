@@ -1,12 +1,11 @@
 package src.RedeSocial.select;
 
 import src.RedeSocial.IFace;
-import src.RedeSocial.Logado;
 
-public class Logout extends Select{
+public class Logout extends Command{
 
     @Override
-    public boolean call(IFace iFace) {
+    public boolean execute(IFace iFace) {
         System.out.println("\nSaindo...\n");
         iFace.logOut();
         return true;

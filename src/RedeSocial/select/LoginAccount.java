@@ -3,12 +3,11 @@ package src.RedeSocial.select;
 import src.RedeSocial.IFace;
 import src.RedeSocial.customExceptions.UserNotFoundException;
 import src.RedeSocial.customExceptions.WrongPasswordException;
-import src.RedeSocial.Logado;
 
-public class LoginAccount extends Select{
+public class LoginAccount extends Command{
 
     @Override
-    public boolean call(IFace iFace) {
+    public boolean execute(IFace iFace) {
         titulo("Entrar na conta");
         boolean result = false;
         try {

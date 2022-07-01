@@ -1,12 +1,11 @@
 package src.RedeSocial.select;
 
 import src.RedeSocial.IFace;
-import src.RedeSocial.Logado;
 
-public class Publish extends Select{
+public class Publish extends Command{
 
     @Override
-    public boolean call(IFace iFace) {
+    public boolean execute(IFace iFace) {
         titulo("Publicar no feed de notícias");
         return iFace.publicarNoFeed(); 
     }

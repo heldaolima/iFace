@@ -2,8 +2,8 @@ package src.RedeSocial.select;
 
 import src.RedeSocial.IFace;
 
-public abstract class Select {;
-    public abstract boolean call(IFace iFace);
+public abstract class Command {;
+    public abstract boolean execute(IFace iFace);
     public abstract String successMsg();
     public abstract String failureMsg();
     

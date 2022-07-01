@@ -1,13 +1,12 @@
 package src.RedeSocial.select;
 
 import src.RedeSocial.IFace;
-import src.RedeSocial.Logado;
 import src.RedeSocial.customExceptions.NoRequestsException;
 
-public class AnswerRequest extends Select{
+public class AnswerRequest extends Command{
 
     @Override
-    public boolean call(IFace iFace) {
+    public boolean execute(IFace iFace) {
         titulo("Responder solicitação");
         boolean result = false;
         try {

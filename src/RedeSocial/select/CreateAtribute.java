@@ -1,12 +1,11 @@
 package src.RedeSocial.select;
 
 import src.RedeSocial.IFace;
-import src.RedeSocial.Logado;
 
-public class CreateAtribute extends Select{
+public class CreateAtribute extends Command{
 
     @Override
-    public boolean call(IFace iFace) {
+    public boolean execute(IFace iFace) {
         titulo("Criar atributo");
         return iFace.novoAtributo(); 
     }

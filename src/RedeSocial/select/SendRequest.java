@@ -1,13 +1,12 @@
 package src.RedeSocial.select;
 
 import src.RedeSocial.IFace;
-import src.RedeSocial.Logado;
 import src.RedeSocial.customExceptions.NoAvaliableUsersException;
 
-public class SendRequest extends Select{
+public class SendRequest extends Command{
 
     @Override
-    public boolean call(IFace iFace) {
+    public boolean execute(IFace iFace) {
         titulo("Enviar solicitação de amizade");
         boolean result = false;
         try {

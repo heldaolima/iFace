@@ -1,12 +1,11 @@
 package src.RedeSocial.select;
 
 import src.RedeSocial.IFace;
-import src.RedeSocial.Logado;
 
-public class GetFeed extends Select{
+public class GetFeed extends Command{
 
     @Override
-    public boolean call(IFace iFace) {
+    public boolean execute(IFace iFace) {
         titulo("Mostrar feed de notícias");
         iFace.mostrarFeed();
         return true;

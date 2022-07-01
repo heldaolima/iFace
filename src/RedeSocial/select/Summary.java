@@ -1,12 +1,11 @@
 package src.RedeSocial.select;
 
 import src.RedeSocial.IFace;
-import src.RedeSocial.Logado;
 
-public class Summary extends Select{
+public class Summary extends Command{
 
     @Override
-    public boolean call(IFace iFace) {
+    public boolean execute(IFace iFace) {
         titulo("Resumo da conta");
         iFace.resumoDaConta();
         return true;

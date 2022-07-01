@@ -12,7 +12,7 @@ public class Interface {
         IFace iFace = new IFace();
         Scanner sc = new Scanner(System.in);
         int escolha = 0;
-        ArrayList<Select> unloggedIn = createUnloggedIn(), loggedIn = createLoggedIn();
+        ArrayList<Command> unloggedIn = createUnloggedIn(), loggedIn = createLoggedIn();
         
         while (escolha != -1) {
             System.out.println("-=-=- iFace -=-=-");
@@ -30,7 +30,7 @@ public class Interface {
                 
                 escolha--;
                 try {
-                    if (unloggedIn.get(escolha).call(iFace))
+                    if (unloggedIn.get(escolha).execute(iFace))
                         System.out.print(unloggedIn.get(escolha).successMsg());
                     else
                         System.out.print(unloggedIn.get(escolha).failureMsg());
@@ -48,9 +48,10 @@ public class Interface {
                 } catch (NumberFormatException e) {
                     System.err.println("\nEntrada inválida. Por favor, insira um número\n");
                 }
+                
                 escolha--;
                 try {
-                    if (loggedIn.get(escolha).call(iFace))
+                    if (loggedIn.get(escolha).execute(iFace))
                         System.out.print(loggedIn.get(escolha).successMsg());
                     else
                         System.out.print(loggedIn.get(escolha).failureMsg());
@@ -63,15 +64,15 @@ public class Interface {
         System.out.println("\nEncerrando...\n");
     }
     
-    public static ArrayList<Select> createUnloggedIn() {
-        ArrayList<Select> unlogged = new ArrayList<>();
+    public static ArrayList<Command> createUnloggedIn() {
+        ArrayList<Command> unlogged = new ArrayList<>();
         unlogged.add(new CreateAccount());
         unlogged.add(new LoginAccount());
         return unlogged;
     }
 
-    public static ArrayList<Select> createLoggedIn() {
-        ArrayList<Select> logged = new ArrayList<>();
+    public static ArrayList<Command> createLoggedIn() {
+        ArrayList<Command> logged = new ArrayList<>();
         
         logged.add(new CreateAtribute());
         logged.add(new EditAtribute());

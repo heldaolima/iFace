@@ -1,13 +1,12 @@
 package src.RedeSocial.select;
 
 import src.RedeSocial.IFace;
-import src.RedeSocial.Logado;
 import src.RedeSocial.customExceptions.WrongPasswordException;
 
-public class DestroyAccount extends Select{
+public class DestroyAccount extends Command{
 
     @Override
-    public boolean call(IFace iFace) {
+    public boolean execute(IFace iFace) {
         titulo("Excluir conta");
         boolean result = false;
         try {

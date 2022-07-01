@@ -1,13 +1,12 @@
 package src.RedeSocial.select;
 
 import src.RedeSocial.IFace;
-import src.RedeSocial.Logado;
 import src.RedeSocial.customExceptions.ComunityCreatedException;
 
-public class CreateComunity extends Select{
+public class CreateComunity extends Command{
 
     @Override
-    public boolean call(IFace iFace) {
+    public boolean execute(IFace iFace) {
         titulo("Criar comunidade");
         boolean result = false;
         try {
