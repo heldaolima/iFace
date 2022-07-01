@@ -26,14 +26,14 @@ Caso faça login, o usuário tem as seguintes opções:
 
 Conforme as funcionalidades demandadas para o projeto.
 
-## Notas sobre a implementação
-### Atributos
+# Notas sobre a implementação
+## Atributos
 Interpretei que Atributo na rede social é uma característica que o usuário escolhe mostrar a seu respeito. Por exemplo, o atributo "Trabalho" com a descrição "Sou engenheiro de Software na empresa X".
 
-### Comunidades
+## Comunidades
 No momento, cada usuário é capaz de criar apenas uma comunidade. 
 
-### Conceitos de Programação Orientada a Objetos
+## Conceitos de Programação Orientada a Objetos
 Dentro da pasta `src` há, além da Interface, dois pacotes. O pacote `usuario` guarda classes de atributos de um usuário nessa rede. Em `RedeSocial` ficam os componentes da rede social, que inclui o usuário.
 
 - `RedeSocial/abstratas` Guarda as classes abstratas utilizadas. No caso:
@@ -85,3 +85,67 @@ Tratamento de Exceções no projeto:
 - **Visualização do feed e resumo da conta**: Ambas funções de leitura apenas, não há o que tratar aqui. O controle já é feito pelo programa.
 
 - **Exclusão da conta**: Para confirmar a exclusão da conta, o usuário deve reinserir a sua senha. Caso insira uma senha inválida, a exceção `WrongPassowordException` é lançada e a operação é cancelada.
+
+# Design Patterns
+Code smells encontrados no projeto e a suas resoluções
+
+## Large Class
+A classe `IFace`, centro do projeto, ficou grande demais porque dentro dela havia, além das funcionalidades da rede social, todo o tratamento de entradas com exceptions e regras de negócio. 
+### Padrão aplicado
+**Extract Class**: A partir desses tratamentos de entrada criei uma classe abstrata, `Entrada`, na qual regras gerais estão definidas. Cada tipo de entrada na rede social é uma subclasse de `Entrada`, a saber: `Nome`, `Login`, `Senha` e `Texto`, cada uma com as próprias regras. Além de diminuir `IFace`, o tratamento das entradas do usuário ficou mais simples e padronizado.
+
+## Long method
+Com a criação da classe `Entrada`, todos os métodos que precisassem ler uma entrada do usuário repetiam o mesmo bloco de código:
+
+    while(true) {
+            try {
+                System.out.print("Insira a [entrada]");
+                entrada.setEntrada(sc.nextLine());
+                break;
+            } catch (InvalidInputException e) {
+                System.err.println(e.getMessage());
+            }
+        }
+Pois toda entrada precisa ser lida e tratada de forma amigável. 
+
+### Padrão aplicado
+**Extract Method**: Esse bloco todo virou o seguinte método: 
+    
+    public void lerEntrada(Entrada entrada, String comando) {
+        while(true) {
+            try {
+                System.out.print(comando);
+                entrada.setEntrada(sc.nextLine());
+                break;
+            } catch (InvalidInputException e) {
+                System.err.println(e.getMessage());
+            }
+        }
+    }
+
+O primeiro parâmetro é uma `Entrada`. Faço, portanto, uso de polimorfismo para que cada tipo de entrada se comporte da forma adequada na função `setEntrada()`, isto é, cada uma considere as suas regras. O segundo parâmetro é uma string, na qual está o comando que se repete caso a entrada seja inválida ("Crie um login: ", por exemplo). Com isso, em vez de ter de repetir o bloco ao longo dos métodos, basta chamar essa função em uma linha.
+
+# Switch Statement
+A aplicação é executada através da classe `Interface`, onde está localizada a função `main`. Essa execução ocorria através de uma cadeia de `if-else`, um para cada opção disponível no menu (cerca de dezesseis).
+## Padrão aplicado
+**Command**: Criei a classe abstrata `Command`, da seguinte forma: 
+    
+    public abstract class Command {;
+        public abstract boolean execute(IFace iFace);
+        public abstract String successMsg();
+        public abstract String failureMsg();
+        
+        public void titulo(String str) {
+            System.out.println("-=-=- "+str+" -=-=-");
+    }
+
+Cada subclasse de `Command` é uma das opções do menu, então cada uma executa sua determinada função em `iFace` através da função `execute()`. Como a maior parte dessas operações retornam booleano de sucesso ou falha, defini que elas devem ter a função `successMsg()` e `failureMsg()`, que retornam as respectivas Strings.
+
+Então, na classe `Interface`, defini dois ArrayLists do tipo `Command`: `unloggedIn` é preenchido com as classes de comandos do usuário não logado e `loggedIn` é preenchdido com os comandos do usuário logado. Assim, basta verificar se o usuário está logado e chamar no ArrayList respectivo a opção que ele escolheu, na função abaixo:
+
+     public static void call(Command comando, IFace iface) {
+        if (comando.execute(iface))
+            System.out.println(comando.successMsg());
+        else
+            System.out.println(comando.failureMsg());
+    }

@@ -84,9 +84,9 @@ public class Interface {
 
     public static void call(Command comando, IFace iface) {
         if (comando.execute(iface))
-            comando.successMsg();
+            System.out.println(comando.successMsg());
         else
-            comando.failureMsg();
+            System.out.println(comando.failureMsg());
     }
 
 }
