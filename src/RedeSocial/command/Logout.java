@@ -1,13 +1,13 @@
-package src.RedeSocial.select;
+package src.RedeSocial.command;
 
 import src.RedeSocial.IFace;
 
-public class Summary extends Command{
+public class Logout extends Command{
 
     @Override
     public boolean execute(IFace iFace) {
-        titulo("Resumo da conta");
-        iFace.resumoDaConta();
+        System.out.println("\nSaindo...\n");
+        iFace.logOut();
         return true;
     }
 
@@ -20,5 +20,6 @@ public class Summary extends Command{
     public String failureMsg() {
         return "";
     }
+
     
 }

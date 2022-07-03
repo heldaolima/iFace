@@ -2,8 +2,8 @@ package src.RedeSocial.invoker;
 
 import java.util.ArrayList;
 
-import src.RedeSocial.select.CreateAccount;
-import src.RedeSocial.select.LoginAccount;
+import src.RedeSocial.command.CreateAccount;
+import src.RedeSocial.command.LoginAccount;
 
 public class UnLoggedIn extends Invoker {
     @Override

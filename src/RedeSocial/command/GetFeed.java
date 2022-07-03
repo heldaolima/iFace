@@ -1,13 +1,13 @@
-package src.RedeSocial.select;
+package src.RedeSocial.command;
 
 import src.RedeSocial.IFace;
 
-public class Logout extends Command{
+public class GetFeed extends Command{
 
     @Override
     public boolean execute(IFace iFace) {
-        System.out.println("\nSaindo...\n");
-        iFace.logOut();
+        titulo("Mostrar feed de notícias");
+        iFace.mostrarFeed();
         return true;
     }
 
@@ -20,6 +20,5 @@ public class Logout extends Command{
     public String failureMsg() {
         return "";
     }
-
     
 }

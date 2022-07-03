@@ -1,13 +1,13 @@
-package src.RedeSocial.select;
+package src.RedeSocial.command;
 
 import src.RedeSocial.IFace;
 
-public class GetFeed extends Command{
+public class Summary extends Command{
 
     @Override
     public boolean execute(IFace iFace) {
-        titulo("Mostrar feed de notícias");
-        iFace.mostrarFeed();
+        titulo("Resumo da conta");
+        iFace.resumoDaConta();
         return true;
     }
 

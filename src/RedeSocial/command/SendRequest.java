@@ -1,4 +1,4 @@
-package src.RedeSocial.select;
+package src.RedeSocial.command;
 
 import src.RedeSocial.IFace;
 import src.RedeSocial.customExceptions.NoAvaliableUsersException;

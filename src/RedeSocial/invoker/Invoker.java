@@ -2,7 +2,7 @@ package src.RedeSocial.invoker;
 
 import java.util.ArrayList;
 import src.RedeSocial.IFace;
-import src.RedeSocial.select.Command;
+import src.RedeSocial.command.Command;
 
 public abstract class Invoker {
     public ArrayList<Command> comandos;
@@ -15,7 +15,7 @@ public abstract class Invoker {
         else
             System.out.println(comando.failureMsg());
     }
-    
+
     public void call(int i, IFace iFace){
         this.call(comandos.get(i), iFace);
     } 
