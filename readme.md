@@ -1,10 +1,10 @@
 # Projeto P2 - Rede de relacionamentos
 Implementação de um sistema que mantém uma rede de relacionamentos, semelhante a uma rede social.
 
-- [Instruções de execução](##-Instruções-de-execução)
-- [Notas sobre a implementação](#-Notas-sobre-a-implementação)
-- [Tratamento de exceções](#-Exceções)
-- [Design Patterns](#-Design-Patterns)
+- [Instruções de execução](##Instruções-de-execução)
+- [Notas sobre a implementação](#Notas-sobre-a-implementação)
+- [Tratamento de exceções](#Exceções)
+- [Design Patterns](#Design-Patterns)
 
 ## Instruções de execução
 É no arquivo `src/Interface.java` que a rede funciona. É preciso que ele seja executado a partir da pasta do projeto, e não de dentro de `src`, por conta dos pacotes.
