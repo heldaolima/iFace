@@ -1,10 +1,8 @@
 package src;
 
-import java.util.ArrayList;
 import java.util.Scanner;
-
 import src.RedeSocial.IFace;
-import src.RedeSocial.select.*;
+import src.RedeSocial.invoker.*;
 
 
 public class Interface {
@@ -12,8 +10,12 @@ public class Interface {
         IFace iFace = new IFace();
         Scanner sc = new Scanner(System.in);
         int escolha = 0;
-        ArrayList<Command> unloggedIn = createUnloggedIn(), loggedIn = createLoggedIn();
-        
+        UnLoggedIn unloggedIn =  new UnLoggedIn();
+        LoggedIn loggedIn = new LoggedIn();
+
+        unloggedIn.setCommands();
+        loggedIn.setCommands();
+
         while (escolha != -1) {
             System.out.println("-=-=- iFace -=-=-");
             if (iFace.logado == null) {
@@ -26,7 +28,7 @@ public class Interface {
                         break;
                     escolha--;
                     try {
-                        call(unloggedIn.get(escolha), iFace);
+                        unloggedIn.call(escolha, iFace);
                     } catch (IndexOutOfBoundsException e) {
                         System.err.println("\nEscolha inválida. Insira um número válido\n");
                     }
@@ -43,7 +45,7 @@ public class Interface {
                     escolha = Integer.parseInt(sc.nextLine());
                     escolha--;
                     try {
-                        call(loggedIn.get(escolha), iFace);
+                        loggedIn.call(escolha, iFace);
                     } catch (IndexOutOfBoundsException e) {
                         System.err.println("\nEscolha inválida. Insira um número válido\n");
                     }
@@ -55,38 +57,4 @@ public class Interface {
         sc.close();
         System.out.println("\nEncerrando...\n");
     }
-    
-    public static ArrayList<Command> createUnloggedIn() {
-        ArrayList<Command> unlogged = new ArrayList<>();
-        unlogged.add(new CreateAccount());
-        unlogged.add(new LoginAccount());
-        return unlogged;
-    }
-
-    public static ArrayList<Command> createLoggedIn() {
-        ArrayList<Command> logged = new ArrayList<>();
-        
-        logged.add(new CreateAtribute());
-        logged.add(new EditAtribute());
-        logged.add(new SendRequest());
-        logged.add(new AnswerRequest());
-        logged.add(new SendMessage());
-        logged.add(new CreateComunity());
-        logged.add(new BecomeMember());
-        logged.add(new GetFeed());
-        logged.add(new Publish());
-        logged.add(new Summary());
-        logged.add(new Logout());
-        logged.add(new DestroyAccount());
-        
-        return logged;
-    }
-
-    public static void call(Command comando, IFace iface) {
-        if (comando.execute(iface))
-            System.out.println(comando.successMsg());
-        else
-            System.out.println(comando.failureMsg());
-    }
-
 }

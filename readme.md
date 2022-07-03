@@ -1,10 +1,10 @@
 # Projeto P2 - Rede de relacionamentos
 Implementação de um sistema que mantém uma rede de relacionamentos, semelhante a uma rede social.
 
-- [Instruções de execução] (##-Instruções-de-execução)
-- [Notas sobre a implementação] (#-Notas-sobre-a-implementação)
-- [Tratamento de exceções] (#-Exceções)
-- [Design Patterns] (#-Design-Patterns)
+- [Instruções de execução](##-Instruções-de-execução)
+- [Notas sobre a implementação](#-Notas-sobre-a-implementação)
+- [Tratamento de exceções](#-Exceções)
+- [Design Patterns](#-Design-Patterns)
 
 ## Instruções de execução
 É no arquivo `src/Interface.java` que a rede funciona. É preciso que ele seja executado a partir da pasta do projeto, e não de dentro de `src`, por conta dos pacotes.
@@ -146,11 +146,22 @@ A aplicação é executada através da classe `Interface`, onde está localizada
 
 Cada subclasse de `Command` é uma das opções do menu, então cada uma executa sua determinada função em `iFace` através da função `execute()`. Como a maior parte dessas operações retornam booleano de sucesso ou falha, defini que elas devem ter a função `successMsg()` e `failureMsg()`, que retornam as respectivas Strings.
 
-Então, na classe `Interface`, defini dois ArrayLists do tipo `Command`: `unloggedIn` é preenchido com as classes de comandos do usuário não logado e `loggedIn` é preenchdido com os comandos do usuário logado. Assim, basta verificar se o usuário está logado e chamar no ArrayList respectivo a opção que ele escolheu, na função abaixo:
+Para gaurdar os conjuntos de comandos, criei a classe abstrata `Invoker` da seguinte forma:
 
-     public static void call(Command comando, IFace iface) {
-        if (comando.execute(iface))
-            System.out.println(comando.successMsg());
-        else
-            System.out.println(comando.failureMsg());
+    public abstract class Invoker {
+        public ArrayList<Command> comandos;
+
+        public abstract void setCommands();
+        
+        public void call(Command comando, IFace iFace) {
+            if (comando.execute(iFace))
+                System.out.println(comando.successMsg());
+            else
+                System.out.println(comando.failureMsg());
+        }
+        
+        public void call(int i, IFace iFace){
+            this.call(comandos.get(i), iFace);
+        } 
     }
+As duas subclasses são `UnLoggedIn`, na qual `setCommands()` preenche o ArrayList com os comandos do usuário que não fez login, e `LoggedIn`, com os comandos do usuário logado. Na `main`, basta chamar a função `call` com o objeto adequado. 
